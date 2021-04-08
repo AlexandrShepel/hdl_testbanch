@@ -125,12 +125,22 @@ public class ConfigurationPanel extends JLayeredPane implements FrontendParamete
      *         Value is clocks hub port.
      */
     public HashMap<String, String> getClocksHashMap() {
-        /* Sends selected clocks to the page #3.
-        There user will chose report sampling frequency from this clocks list. */
-        ArrayList<String> clocks = new ArrayList<>(p2.getClocksHashMap().values());
-        p3.setClocksComboBox(clocks);
+        setClocksComboBox(new ArrayList<>(p2.getClocksHashMap().values()));
 
         return p2.getClocksHashMap();
+    }
+
+    /**
+     * Sends selected clocks to the page #3.
+     * There user will chose report sampling frequency from this clocks list.
+     *
+     * @param clocks Clocks that was selected by user for the DUT clocking.
+     */
+    private void setClocksComboBox(ArrayList<String> clocks) {
+        if (clocks.size() != 0)
+            p3.setClocksComboBox(clocks);
+        else
+            p3.setClocksComboBox(p2.getHubClocks());
     }
 
     /**

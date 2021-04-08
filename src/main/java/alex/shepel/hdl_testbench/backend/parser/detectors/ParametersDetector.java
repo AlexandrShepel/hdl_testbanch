@@ -11,7 +11,7 @@ import java.util.HashMap;
 public class ParametersDetector {
 
     /* List of found parameters. */
-    private final HashMap<String, Integer> parameters = new HashMap<>();
+    private final HashMap<String, String> parameters = new HashMap<>();
 
     /**
      * The class constructor.
@@ -66,7 +66,7 @@ public class ParametersDetector {
         codeLine = removeShellSymbols(codeLine);
         parameters.put(
                 codeLine.substring(0, codeLine.indexOf("=")),
-                Integer.parseInt(codeLine.substring(codeLine.indexOf("=") + 1))
+                codeLine.substring(codeLine.indexOf("=") + 1)
         );
     }
 
@@ -109,7 +109,7 @@ public class ParametersDetector {
      *         Key contains a name of a found parameter.
      *         Map's value stores an parameter's value.
      */
-    public HashMap<String, Integer> getParameters() {
+    public HashMap<String, String> getParameters() {
         return parameters;
     }
 

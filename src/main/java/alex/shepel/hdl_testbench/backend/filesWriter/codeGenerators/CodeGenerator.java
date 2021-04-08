@@ -18,7 +18,7 @@ import java.util.HashMap;
 public class CodeGenerator extends ArrayList<String> {
 
     /* Properties of a file that can be overwritten. */
-    private HashMap<String, Integer> parameters;
+    private HashMap<String, String> parameters;
     private String fileName;
 
     /**
@@ -65,7 +65,7 @@ public class CodeGenerator extends ArrayList<String> {
      *
      * @param parameters The parameters of the parsed DUT file.
      */
-    public void setParameters(HashMap<String, Integer> parameters) {
+    public void setParameters(HashMap<String, String> parameters) {
         this.parameters = parameters;
 
         /* Sets parameters in the parameters declaration field. */
@@ -105,7 +105,7 @@ public class CodeGenerator extends ArrayList<String> {
      * @return The HashMap object that contains parameters names
      *         and their values.
      */
-    public HashMap<String, Integer> getParameters() {
+    public HashMap<String, String> getParameters() {
         return parameters;
     }
 

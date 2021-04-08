@@ -187,7 +187,7 @@ public class FilesWriter {
      * @param parameters The HashMap object with names
      *                   and values of DUT's parameters.
      */
-    public void setParameters(HashMap<String, Integer> parameters) {
+    public void setParameters(HashMap<String, String> parameters) {
         tbCodeGen.setParameters(parameters);
         ifaceCodeGen.setParameters(parameters);
         monitorCodeGen.setParameters(parameters);

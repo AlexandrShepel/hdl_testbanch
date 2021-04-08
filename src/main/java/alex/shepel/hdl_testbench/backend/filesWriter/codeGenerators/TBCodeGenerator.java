@@ -116,16 +116,34 @@ public class TBCodeGenerator extends CodeGenerator {
      *                      between DUT's and clk_hub's modules.
      */
     public void setDutClocksPorts(HashMap<String, String> clocksHashMap) {
-        for (int index = 0; index < size(); index++) {
-            if (get(index).equals("\t\tiface.dut_clk = iface.hub_clk;")) {
-                remove(index);
+        if (clocksHashMap.size() > 0) {
+            for (int index = 0; index < size(); index++) {
+                if (get(index).contains("iface.dut_clk = iface.hub_clk;")) {
+                    remove(index);
 
-                for (String name: clocksHashMap.keySet()) {
-                    String editedLine = "\t\tiface." + name + " = iface." + clocksHashMap.get(name) + ";";
-                    add(index, editedLine);
+                    for (String name : clocksHashMap.keySet()) {
+                        String editedLine = "\t\tiface." + name + " = iface." + clocksHashMap.get(name) + ";";
+                        add(index, editedLine);
+                    }
+
+                    break;
                 }
+            }
+        }
 
-                break;
+        else {
+            for (int index = 0; index < size(); index++) {
+                final boolean isAlwaysBlock = get(index).contains("always begin");
+                final boolean isClockingBlock = get(index + 1).contains("#(CLK_PERIOD / 2)");
+                final boolean isDutClockConnection = get(index + 2).equals("\t\tiface.dut_clk = iface.hub_clk;");
+
+                if (isAlwaysBlock && isClockingBlock && isDutClockConnection) {
+                    while(!get(index).equals(""))
+                        remove(index);
+
+                    add(index, "\t// DUT doesn't have input clock port.");
+                    break;
+                }
             }
         }
     }
@@ -136,8 +154,8 @@ public class TBCodeGenerator extends CodeGenerator {
      * every tact of this frequency.
      *
      * @param samplingClock Sampling frequency that is used
-     *                                in the test environment for writing
-     *                                output data to the report file.
+     *                      in the test environment for writing
+     *                      output data to the report file.
      */
     public void setReportSamplingFrequency(String samplingClock) {
         for (int index = 0; index < size(); index++) {

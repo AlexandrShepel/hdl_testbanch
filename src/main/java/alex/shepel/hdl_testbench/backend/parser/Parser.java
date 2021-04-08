@@ -175,7 +175,7 @@ public class Parser {
     public HashMap<String, PortDescriptor> getOutputPorts() {
         return portsDetector.getOutputPorts();
     }
-    public HashMap<String, Integer> getParameters() {
+    public HashMap<String, String> getParameters() {
         return parametersDetector.getParameters();
     }
 }

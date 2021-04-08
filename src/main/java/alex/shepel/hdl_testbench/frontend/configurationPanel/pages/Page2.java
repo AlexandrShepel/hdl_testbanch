@@ -38,10 +38,16 @@ public class Page2 extends JPanel implements FrontendParameters {
     DUT and "clock_hub" modules. */
     private final HashMap<String, ClockSpecificationPanel> clockSpecPanels = new HashMap<>();
 
-    /* The dialog text that is displayed on the application window. */
-    private static final String PAGE_TEXT =
+    /* List of the available clocks in the clock hub. */
+    private ArrayList<String> hubClocks;
+
+    /* The dialog texts that will be displayed on the application window. */
+    private static final String PAGE_TEXT_WITH_CLK =
             "DUT file is read. \n" +
             "Specify the clock signals, that must be connected to the DUT.";
+    private static final String PAGE_TEXT_WITHOUT_CLK =
+            "DUT file is read. This page customizes module clocks. \n" +
+            "But your DUT doesn't contain any clock inputs. Skip this page.";
 
     /**
      * The class constructor.
@@ -53,9 +59,6 @@ public class Page2 extends JPanel implements FrontendParameters {
                 FlowLayout.CENTER,
                 HORIZONTAL_COMPONENTS_ALIGNMENT,
                 VERTICAL_COMPONENTS_ALIGNMENT));
-
-        PresetTextArea textArea = new PresetTextArea(PAGE_TEXT);
-        add(textArea);
     }
 
     /**
@@ -83,10 +86,14 @@ public class Page2 extends JPanel implements FrontendParameters {
      *                  It is automatically formed from a DUT file.
      */
     public void setDutClocks(ArrayList<String> dutClocks) {
+        if (dutClocks.size() != 0)
+            add(new PresetTextArea(PAGE_TEXT_WITH_CLK));
+        else
+            add(new PresetTextArea(PAGE_TEXT_WITHOUT_CLK));
+
         /* Deletes an old list of the clocks. */
-        for (ClockSpecificationPanel clkPanel: clockSpecPanels.values()) {
+        for (ClockSpecificationPanel clkPanel: clockSpecPanels.values())
             remove(clkPanel);
-        }
 
         /* Sets a new list of the clocks. */
         for (String dutClockName: dutClocks) {
@@ -105,9 +112,17 @@ public class Page2 extends JPanel implements FrontendParameters {
      *                  of available clocks.
      */
     public void setHubClocks(ArrayList<String> hubClocks) {
-        for (String dutClockName: clockSpecPanels.keySet()) {
+        this.hubClocks = hubClocks;
+
+        for (String dutClockName: clockSpecPanels.keySet())
             clockSpecPanels.get(dutClockName).setClocksComboBox(hubClocks);
-        }
+    }
+
+    /**
+     * @return List of the available clocks in the clock hub.
+     */
+    public ArrayList<String> getHubClocks() {
+        return hubClocks;
     }
 
     /**
