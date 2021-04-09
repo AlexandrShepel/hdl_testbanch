@@ -65,36 +65,44 @@ public class CodeGenerator extends ArrayList<String> {
      *
      * @param parameters The parameters of the parsed DUT file.
      */
+    @SuppressWarnings("SuspiciousListRemoveInLoop")
     public void setParameters(HashMap<String, String> parameters) {
         this.parameters = parameters;
 
-        /* Sets parameters in the parameters declaration field. */
         for (int index = 0; index < size(); index++) {
-            if (get(index).contains("localparam PARAMETER")) {
+            final boolean isLocalParam = get(index).contains("localparam PARAMETER");
+            final boolean isGlobalParam = get(index).contains("parameter PARAMETER");
+            final boolean isInstIfaceParam = get(index).contains(".PARAMETER (iface.PARAMETER)");
+            final boolean isInstClassParam = get(index).contains(".PARAMETER (PARAMETER)");
+
+            if (isLocalParam || isGlobalParam || isInstIfaceParam || isInstClassParam) {
                 remove(index);
 
-                for (String name : parameters.keySet()) {
-                    add(index, "\tlocalparam " + name + " = " + parameters.get(name) + ";");
+                /* Sets local parameters in the local parameters declaration field. */
+                if (isLocalParam)
+                    for (String name : parameters.keySet())
+                        add(index, "\tlocalparam " + name + " = " + parameters.get(name) + ";");
+
+                /* Sets global parameters in the global parameters declaration field -- block #(). */
+                if (isGlobalParam)
+                    for (String name : parameters.keySet())
+                        add(index, "\tparameter " + name + ",");
+
+                /* Sets classes parameters when parameters received through the interface. */
+                if (isInstIfaceParam)
+                    for (String name : parameters.keySet())
+                        add(index, "\t\t." + name + " (iface." + name + "),");
+
+                /* Sets classes parameters when parameters received through the #()-block parameters. */
+                if (isInstClassParam)
+                    for (String name : parameters.keySet())
+                        add(index, "\t\t." + name + " (" + name + "),");
+
+                /* Removes last redundant "," in the parameters declaration block. */
+                if (isGlobalParam || isInstIfaceParam || isInstClassParam) {
+                    final int lastParameterIndex = index + parameters.keySet().size() - 1;
+                    set(lastParameterIndex, get(lastParameterIndex).replace(",", ""));
                 }
-
-                break;
-            }
-        }
-
-        /* Sets parameters for the connected to the DUT modules. */
-        for (int index = 0; index < size(); index++) {
-            if (get(index).contains(".PARAMETER")) {
-                remove(index);
-
-                for (String name: parameters.keySet()) {
-                    add(index, "\t\t." + name + " (" + name + "),");
-                }
-
-                int lastParameterIndex = index + parameters.keySet().size() - 1;
-                String lastParameterLine = get(lastParameterIndex);
-                set(lastParameterIndex, lastParameterLine.substring(0, lastParameterLine.indexOf(",")));
-
-                break;
             }
         }
     }

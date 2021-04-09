@@ -13,15 +13,14 @@
 `include "./WriteGenerator.sv"
 
 
-class WriteDriver;
+class WriteDriver #(
+    parameter PARAMETER
+);
 
 
     /*
         Instance properties.
     */
-    // Parameters that are copied from the DUT.
-    localparam PARAMETER = 0000;
-
     // The interface is based on the port list of the DUT.
     virtual Interface iface;
 

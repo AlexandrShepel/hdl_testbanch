@@ -12,15 +12,14 @@
 `include "./ReadGenerator.sv"
 
 
-class ReadDriver;
+class ReadDriver #(
+    parameter PARAMETER
+);
 
 
     /*
         Instance properties.
     */
-    // Parameters that are copied from the DUT.
-    localparam PARAMETER = 0000;
-
     // The path to the file, that contains the testing input data.
     local string filePath;
 

@@ -19,14 +19,13 @@ module tb ();
     /*
         Instance properties.
     */
-    // Parameters that are copied from the DUT.
-    localparam PARAMETER = 0000;
-
-	// The interface is based on the port list of the DUT.
+	// The interface is based on the ports and parameters lists of the DUT.
     Interface iface();
 
     // The testing environment object.
-    Environment env;
+    Environment #(
+        .PARAMETER (iface.PARAMETER)
+    ) env;
 
     // The fundamental frequency clock and its default period.
     bit clk;
@@ -37,7 +36,7 @@ module tb ();
         The design under test.
     */
     design_under_test #(
-        .PARAMETER (PARAMETER)
+        .PARAMETER (iface.PARAMETER)
 	) dut (
 		// inputs
 		

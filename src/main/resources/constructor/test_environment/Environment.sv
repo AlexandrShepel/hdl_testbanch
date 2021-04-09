@@ -15,7 +15,9 @@
 `include "Interface.sv"
 
 
-class Environment;
+class Environment #(
+    parameter PARAMETER
+);
 
 
     /*
@@ -31,9 +33,17 @@ class Environment;
     virtual Interface iface;
 
     // The objects of the test environment.
-    ReadDriver r;
-    WriteDriver w;
-    Monitor m;
+    ReadDriver #(
+        .PARAMETER (PARAMETER)
+    ) r;
+
+    WriteDriver #(
+        .PARAMETER (PARAMETER)
+    ) w;
+
+    Monitor #(
+        .PARAMETER (PARAMETER)
+    ) m;
 
 
     /* 

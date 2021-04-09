@@ -189,6 +189,7 @@ public class FilesWriter {
      */
     public void setParameters(HashMap<String, String> parameters) {
         tbCodeGen.setParameters(parameters);
+        envCodeGen.setParameters(parameters);
         ifaceCodeGen.setParameters(parameters);
         monitorCodeGen.setParameters(parameters);
         readCodeGen.setParameters(parameters);
