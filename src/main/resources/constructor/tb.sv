@@ -51,17 +51,17 @@ module tb ();
     */
 	clk_hub #()	clk_hub (
         // inputs
-        .clk_hub_50MHz              (iface.clk_hub_50MHz),
+        .hub_clk_50MHz              (iface.hub_clk_50MHz),
 
         // outputs
-        .clk_hub_5MHz               (iface.clk_hub_5MHz),
-        .clk_hub_1MHz               (iface.clk_hub_1MHz),
-        .clk_hub_100kHz             (iface.clk_hub_100kHz),
-        .clk_hub_10kHz              (iface.clk_hub_10kHz),
-        .clk_hub_1kHz               (iface.clk_hub_1kHz),
-        .clk_hub_100Hz              (iface.clk_hub_100Hz),
-        .clk_hub_10Hz               (iface.clk_hub_10Hz),
-        .clk_hub_1Hz                (iface.clk_hub_1Hz)
+        .hub_clk_5MHz               (iface.hub_clk_5MHz),
+        .hub_clk_1MHz               (iface.hub_clk_1MHz),
+        .hub_clk_100kHz             (iface.hub_clk_100kHz),
+        .hub_clk_10kHz              (iface.hub_clk_10kHz),
+        .hub_clk_1kHz               (iface.hub_clk_1kHz),
+        .hub_clk_100Hz              (iface.hub_clk_100Hz),
+        .hub_clk_10Hz               (iface.hub_clk_10Hz),
+        .hub_clk_1Hz                (iface.hub_clk_1Hz)
     );
 
 
@@ -79,7 +79,7 @@ module tb ();
     */
     always begin
         #(CLK_PERIOD / 2)
-        iface.clk_hub_50MHz = clk;
+        iface.hub_clk_50MHz = clk;
     end
 
 
