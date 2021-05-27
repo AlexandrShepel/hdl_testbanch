@@ -54,6 +54,7 @@ module tb ();
         .hub_clk_50MHz              (iface.hub_clk_50MHz),
 
         // outputs
+        .hub_clk_10MHz              (iface.hub_clk_10MHz),
         .hub_clk_5MHz               (iface.hub_clk_5MHz),
         .hub_clk_1MHz               (iface.hub_clk_1MHz),
         .hub_clk_100kHz             (iface.hub_clk_100kHz),
