@@ -19,8 +19,8 @@
 
 
 module clk_hub (
-	input  logic clk_50MHz,
-	output logic clk_10MHz, clk_5MHz, clk_1MHz, clk_100kHz, clk_10kHz, clk_1kHz, clk_100Hz, clk_10Hz, clk_1Hz
+	input  logic hub_clk_50MHz,
+	output logic hub_clk_10MHz, hub_clk_5MHz, hub_clk_1MHz, hub_clk_100kHz, hub_clk_10kHz, hub_clk_1kHz, hub_clk_100Hz, hub_clk_10Hz, hub_clk_1Hz
 );
     
 	localparam RATIO_2 = 2;
@@ -30,15 +30,15 @@ module clk_hub (
 	/*
 		The submodules connection.
 	*/
-    clk_divider #(RATIO_5)  transform_50MHz_to_10MHz  	(.clk_HF(clk_50MHz),	.clk_LF(clk_10MHz));
-    clk_divider #(RATIO_2)  transform_10MHz_to_5MHz  	(.clk_HF(clk_10MHz),	.clk_LF(clk_5MHz));
-	clk_divider #(RATIO_10) transform_5MHz_to_1MHz  	(.clk_HF(clk_5MHz),		.clk_LF(clk_1MHz));
-	clk_divider #(RATIO_10) transform_1MHz_to_100kHz  	(.clk_HF(clk_1MHz), 	.clk_LF(clk_100kHz));
-	clk_divider #(RATIO_10) transform_100kHz_to_10kHz 	(.clk_HF(clk_100kHz),	.clk_LF(clk_10kHz));
-	clk_divider #(RATIO_10) transform_10kHz_to_1kHz   	(.clk_HF(clk_10kHz), 	.clk_LF(clk_1kHz));
-	clk_divider #(RATIO_10) transform_1kHz_to_100Hz   	(.clk_HF(clk_1kHz), 	.clk_LF(clk_100Hz));
-	clk_divider #(RATIO_10) transform_100Hz_to_10Hz   	(.clk_HF(clk_100Hz), 	.clk_LF(clk_10Hz));
-	clk_divider #(RATIO_10) transform_10Hz_to_1Hz 	   	(.clk_HF(clk_10Hz), 	.clk_LF(clk_1Hz));
+    clk_divider #(RATIO_5)  transform_50MHz_to_10MHz  	(.clk_HF(hub_clk_50MHz),	.clk_LF(hub_clk_10MHz));
+    clk_divider #(RATIO_2)  transform_10MHz_to_5MHz  	(.clk_HF(hub_clk_10MHz),	.clk_LF(hub_clk_5MHz));
+	clk_divider #(RATIO_10) transform_5MHz_to_1MHz  	(.clk_HF(hub_clk_5MHz),		.clk_LF(hub_clk_1MHz));
+	clk_divider #(RATIO_10) transform_1MHz_to_100kHz  	(.clk_HF(hub_clk_1MHz), 	.clk_LF(hub_clk_100kHz));
+	clk_divider #(RATIO_10) transform_100kHz_to_10kHz 	(.clk_HF(hub_clk_100kHz),	.clk_LF(hub_clk_10kHz));
+	clk_divider #(RATIO_10) transform_10kHz_to_1kHz   	(.clk_HF(hub_clk_10kHz), 	.clk_LF(hub_clk_1kHz));
+	clk_divider #(RATIO_10) transform_1kHz_to_100Hz   	(.clk_HF(hub_clk_1kHz), 	.clk_LF(hub_clk_100Hz));
+	clk_divider #(RATIO_10) transform_100Hz_to_10Hz   	(.clk_HF(hub_clk_100Hz), 	.clk_LF(hub_clk_10Hz));
+	clk_divider #(RATIO_10) transform_10Hz_to_1Hz 	   	(.clk_HF(hub_clk_10Hz), 	.clk_LF(hub_clk_1Hz));
 
 
 endmodule
