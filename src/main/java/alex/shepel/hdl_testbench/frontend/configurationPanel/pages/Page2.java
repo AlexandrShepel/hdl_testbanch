@@ -86,6 +86,8 @@ public class Page2 extends JPanel implements FrontendParameters {
      *                  It is automatically formed from a DUT file.
      */
     public void setDutClocks(ArrayList<String> dutClocks) {
+        removeAll();
+
         if (dutClocks.size() != 0)
             add(new PresetTextArea(PAGE_TEXT_WITH_CLK));
         else

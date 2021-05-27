@@ -55,7 +55,7 @@ public class PortsDetector {
      *         contains an input declaration. Else "false".
      */
     private boolean isInputDeclaration(String codeLine) {
-        boolean isInputFound = codeLine.contains("input");
+        boolean isInputFound = codeLine.contains("\tinput ") || codeLine.contains(" input ");
         boolean isTypeFound = codeLine.contains("logic") || codeLine.contains("wire") || codeLine.contains("reg");
         return isInputFound && isTypeFound;
     }
@@ -69,7 +69,7 @@ public class PortsDetector {
      *         contains an output declaration. Else "false".
      */
     private boolean isOutputDeclaration(String codeLine) {
-        boolean isOutputFound = codeLine.contains("output");
+        boolean isOutputFound = codeLine.contains("\toutput ") || codeLine.contains(" output ");
         boolean isTypeFound = codeLine.contains("logic") || codeLine.contains("wire") || codeLine.contains("reg");
         return isOutputFound && isTypeFound;
     }

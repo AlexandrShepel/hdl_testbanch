@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //	Name File		:	clk_divider																			//
-//	Autor(-s)		:	Alex Shepel											 								//
+//	Author(-s)		:	Alex Shepel											 								//
 //	Company			:	Radiy																				//
 //																											//
 // 	Description		:	Divides input frequency by specified ratio.											//
@@ -30,7 +30,7 @@ module clk_divider #(
     /*
         The module properties.
     */
-    // Registers for the temporary intermidiate values.
+    // Registers for the temporary intermediate values.
 	logic clk_pos_LF = 0;
 	logic clk_neg_LF = 0;
 
