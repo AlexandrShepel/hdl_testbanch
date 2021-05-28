@@ -35,23 +35,19 @@ public class ParametersDetector {
         boolean isParametersDeclaration = false;
 
         for (String codeLine : parsedFile) {
-            if (!codeLine.contains("//")) {
-                /* Looks for beginning of parameters declaration.
-                Parameters declaration begins with "#(" or "parameter" strings. */
-                if (codeLine.contains("#(") || codeLine.contains("parameter")) {
-                    isParametersDeclaration = true;
-                }
+            /* Looks for beginning of parameters declaration.
+            Parameters declaration begins with "#(" or "parameter" strings. */
+            if (codeLine.contains("#(") || codeLine.contains("parameter"))
+                isParametersDeclaration = true;
 
-                /* Parse parameters and looks for ending of parameters declaration.
-                Parameters declaration ends with symbol ")". */
-                if (isParametersDeclaration) {
-                    if (codeLine.contains(")")) {
-                        isParametersDeclaration = false;
-                    }
-                    if (codeLine.contains("=")) {
-                        getParameter(codeLine);
-                    }
-                }
+            /* Parse parameters and looks for ending of parameters declaration.
+            Parameters declaration must contain "=". Declaration block ends with symbol ")". */
+            if (isParametersDeclaration) {
+                if (codeLine.contains(")"))
+                    isParametersDeclaration = false;
+
+                if (codeLine.contains("="))
+                    getParameter(codeLine);
             }
         }
     }
