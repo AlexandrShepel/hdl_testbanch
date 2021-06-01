@@ -22,7 +22,6 @@ public class Parser {
     /* Detects needed data in the parsed files.
     Detecting data is covered in the detectors names. */
     private ClocksDetector inputClkParser;
-    private ClocksDetector outputClkParser;
     private PortsDetector portsDetector;
     private ParametersDetector parametersDetector;
 
@@ -90,7 +89,6 @@ public class Parser {
         /* Looks for ports, clocks and parameters in the parsed file. */
         portsDetector = new PortsDetector(parsedFile);
         inputClkParser = new ClocksDetector(portsDetector.getInputPorts().keySet());
-        outputClkParser = new ClocksDetector(portsDetector.getOutputPorts().keySet());
         parametersDetector = new ParametersDetector(parsedFile);
     }
 
@@ -165,9 +163,6 @@ public class Parser {
     /* Getters of detectors objects. */
     public ArrayList<String> getInputClocks() {
         return inputClkParser.getClocks();
-    }
-    public ArrayList<String> getOutputClocks() {
-        return outputClkParser.getClocks();
     }
     public HashMap<String, PortDescriptor> getInputPorts() {
         return portsDetector.getInputPorts();

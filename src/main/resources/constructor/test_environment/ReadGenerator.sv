@@ -63,6 +63,7 @@ class ReadGenerator #(
         Reads the test input vector from the file.
     */
     function open(string filePath);
+        integer getFaults, scanFaults;
         string fileLine;    // The store box for the line of the file, that will be read below.
         this.filePath = filePath;
         this.fd = $fopen(filePath, "r");
@@ -72,8 +73,12 @@ class ReadGenerator #(
 
             while (!$feof(fd)) begin
                 this.vector = new [this.vector.size() + 1] (this.vector);
-                $fgets(fileLine, this.fd);
-                $sscanf(fileLine, "%h", this.vector[this.vector.size() - 1]);
+                getFaults = $fgets(fileLine, this.fd);
+                scanFaults = $sscanf(fileLine, "%h", this.vector[this.vector.size() - 1]);
+
+                if (getFaults == 0 || scanFaults == 0) begin
+                    $display("** Warning: Can't read/scan file line: %s", fileLine);
+                end
             end
 
             $fclose(this.fd);

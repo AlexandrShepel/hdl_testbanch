@@ -138,16 +138,6 @@ public class CodeGenerator extends ArrayList<String> {
     }
 
     /**
-     * Prints parsed file to the console.
-     * Used for debugging.
-     */
-    public void printFile() {
-        for (String line: this) {
-            System.out.println(line);
-        }
-    }
-
-    /**
      * Gives packed or unpacked size of port in a format
      * of code (such as "[SOME_PARAMETER - 1 : 0]")
      * and translates it to the number format

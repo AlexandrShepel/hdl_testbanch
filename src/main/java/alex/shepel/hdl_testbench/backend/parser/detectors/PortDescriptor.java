@@ -60,7 +60,7 @@ public class PortDescriptor {
      *         SystemVerilog/Verilog module's port declaration.
      */
     public String toString() {
-        String toString = type;
+        String toString = "bit";
 
         if (!signed.equals(""))
             toString = toString + " " + signed;

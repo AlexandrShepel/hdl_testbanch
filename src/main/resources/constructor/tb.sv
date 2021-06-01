@@ -9,8 +9,12 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-`include "classes/Environment.sv"
 `include "classes/Interface.sv"
+`include "classes/ReadDriver.sv"
+`include "classes/WriteDriver.sv"
+`include "classes/Monitor.sv"
+
+`timescale 1ns/1ps
 
 
 module tb ();
@@ -22,14 +26,42 @@ module tb ();
 	// The interface is based on the ports and parameters lists of the DUT.
     Interface iface();
 
-    // The testing environment object.
-    Environment #(
-        .PARAMETER (iface.PARAMETER)
-    ) env;
+    // Path to the files that will be read.
+	const string READ_FILES = "./readFolder/";
 
-    // The fundamental frequency clock and its default period.
-    bit clk;
-    localparam CLK_PERIOD = 20;
+    // Path to the files that will be written.
+	const string WRITE_FILES = "./writeFolder/";
+
+    // The objects of the test environment.
+    ReadDriver #(
+        .PARAMETER (iface.PARAMETER)
+    ) readDriver;
+    WriteDriver #(
+        .PARAMETER (iface.PARAMETER)
+    ) writeDriver;
+    Monitor #(
+        .PARAMETER (iface.PARAMETER)
+    ) monitor;
+
+    // Sets the time of initialization for the simulation clocks.
+    localparam CLK_INIT_TIME = 0.5;
+
+    // Enables clocking.
+    bit clk_enable = 0;
+
+
+    /*
+        Creates clocks that drive simulation.
+    */
+    clk_driver #(
+        .DUT_CLK_FREQ (iface.DUT_CLK_FREQ),
+        .SAMPLE_FREQ (iface.SAMPLE_FREQ)
+    ) clk_driver (
+        .enable             (clk_enable),
+        .dut_clk            (iface.clk),
+        .reading_clk        (iface.reading_clk),
+        .writing_clk        (iface.writing_clk)
+    );
 
 
 	/*
@@ -39,75 +71,38 @@ module tb ();
         .PARAMETER (iface.PARAMETER)
 	) dut (
 		// inputs
-		
+
 		// outputs
 	);
 
-	
-    /*
-        Creates different frequency clock signals.
-        Fundamental frequency is represented by frequency of input signal.
-        Output signals are created by dividing of input signal frequency.
-    */
-	clk_hub #()	clk_hub (
-        // inputs
-        .hub_clk_50MHz              (iface.hub_clk_50MHz),
-
-        // outputs
-        .hub_clk_10MHz              (iface.hub_clk_10MHz),
-        .hub_clk_5MHz               (iface.hub_clk_5MHz),
-        .hub_clk_1MHz               (iface.hub_clk_1MHz),
-        .hub_clk_100kHz             (iface.hub_clk_100kHz),
-        .hub_clk_10kHz              (iface.hub_clk_10kHz),
-        .hub_clk_1kHz               (iface.hub_clk_1kHz),
-        .hub_clk_100Hz              (iface.hub_clk_100Hz),
-        .hub_clk_10Hz               (iface.hub_clk_10Hz),
-        .hub_clk_1Hz                (iface.hub_clk_1Hz)
-    );
-
 
     /*
-        Creates fundamental high frequency clock.
-    */
-    always begin
-        #(CLK_PERIOD / 2)    	
-        clk = ~clk;
-    end
-
-
-    /*
-        Connects the fundamental clock signal to the clock hub.
-    */
-    always begin
-        #(CLK_PERIOD / 2)
-        iface.hub_clk_50MHz = clk;
-    end
-
-
-    /*
-        Creates the correspondence between created clock signals and DUT ports.
-    */
-    always begin
-		#(CLK_PERIOD / 2)    
-		iface.dut_clk = iface.hub_clk;
-	end
-
-
-    /*
-        Initializes the Environment object.
+        Initializes the test environment.
     */
     initial begin
-        env = new(iface);
+        readDriver = new(iface, READ_FILES);   
+        writeDriver = new(iface, WRITE_FILES);
+        monitor = new(iface);
+        
+        #CLK_INIT_TIME
+        clk_enable = 1;
     end
 
 
     /*
-        Drives the testing environment.
+        Runs reading data from the file.
     */
-    always @(posedge iface.sampling_clk) begin
-        if (iface.sampling_clk) begin
-            env.run();
-        end 
+    always @(posedge iface.reading_clk) begin
+        readDriver.run();   
+    end
+
+
+    /*
+        Runs data logging (console and file).
+    */
+    always @(posedge iface.writing_clk) begin
+        writeDriver.run();
+        monitor.print(); 
     end
 
 

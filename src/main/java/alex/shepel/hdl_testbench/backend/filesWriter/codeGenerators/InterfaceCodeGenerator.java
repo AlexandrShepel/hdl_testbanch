@@ -4,7 +4,6 @@ import alex.shepel.hdl_testbench.backend.BackendParameters;
 import alex.shepel.hdl_testbench.backend.parser.detectors.PortDescriptor;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /*
@@ -28,25 +27,22 @@ public class InterfaceCodeGenerator extends CodeGenerator {
     }
 
     /**
-     * Sets available hub clocks that can be connected to the DUT.
+     * Sets clocks that must be connected to the DUT.
      *
-     * @param hubClocks The ArrayList object that stores ports
-     *                  of the "clk_hub.sv" file.
+     * @param clocksHashMap The ArrayList object that stores ports
+     *                  of the "clk_driver.sv" file.
      */
-    public void setHubClocks(ArrayList<String> hubClocks) {
+    @SuppressWarnings("SuspiciousListRemoveInLoop")
+    public void setClocks(HashMap<String, String> clocksHashMap) {
         for (int index = 0; index < size(); index++) {
-            if (get(index).equals("\tlogic hub_clocks;")) {
-                String editedLine = get(index).replace("hub_clocks;", "");
-
-                for (String clock: hubClocks) {
-                    editedLine = editedLine.concat(clock + ", ");
-                }
-
-                editedLine = editedLine.substring(0, editedLine.length() - 2) + ";";
+            if (get(index).contains("localparam DUT_CLK_FREQ")) {
                 remove(index);
-                add(index, editedLine);
 
-                break;
+                for (String name : clocksHashMap.keySet()) {
+                    String editedLine =
+                            "\tlocalparam DUT_" + name.toUpperCase() + "_FREQ = " + clocksHashMap.get(name) + ";";
+                    add(index, editedLine);
+                }
             }
         }
     }
@@ -60,7 +56,7 @@ public class InterfaceCodeGenerator extends CodeGenerator {
      */
     public void setDutInputs(HashMap<String, PortDescriptor> inputs) {
         for (int index = 0; index < size(); index++) {
-            if (get(index).equals("\tlogic dut_inputs;")) {
+            if (get(index).equals("\tbit dut_inputs;")) {
                 remove(index);
 
                 for (PortDescriptor portDescriptor: inputs.values()) {
@@ -81,12 +77,23 @@ public class InterfaceCodeGenerator extends CodeGenerator {
      */
     public void setDutOutputs(HashMap<String, PortDescriptor> outputs) {
         for (int index = 0; index < size(); index++) {
-            if (get(index).equals("\tlogic dut_outputs;")) {
+            if (get(index).equals("\tbit dut_outputs;")) {
                 remove(index);
 
                 for (PortDescriptor portDescriptor: outputs.values()) {
                     add(index, "\t" + portDescriptor.toString() + ";");
                 }
+
+                break;
+            }
+        }
+    }
+
+    public void setSampleFreq(String freq) {
+        for (int index = 0; index < size(); index++) {
+            if (get(index).contains("localparam SAMPLE_FREQ")) {
+                String editedLine = get(index).replace("0000", freq);
+                set(index, editedLine);
 
                 break;
             }

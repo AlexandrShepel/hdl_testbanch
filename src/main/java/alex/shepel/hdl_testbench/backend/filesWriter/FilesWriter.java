@@ -30,7 +30,7 @@ public class FilesWriter {
 
     /* Files creators. */
     private final TBCodeGenerator tbCodeGen;
-    private final EnvironmentCodeGenerator envCodeGen;
+    private final ClockDriverCodeGenerator clkCodeGen;
     private final InterfaceCodeGenerator ifaceCodeGen;
     private final MonitorCodeGenerator monitorCodeGen;
     private final ReadDriverCodeGenerator readCodeGen;
@@ -44,7 +44,7 @@ public class FilesWriter {
      */
     public FilesWriter() throws IOException {
         tbCodeGen = new TBCodeGenerator();
-        envCodeGen = new EnvironmentCodeGenerator();
+        clkCodeGen = new ClockDriverCodeGenerator();
         ifaceCodeGen = new InterfaceCodeGenerator();
         monitorCodeGen = new MonitorCodeGenerator();
         readCodeGen = new ReadDriverCodeGenerator();
@@ -59,7 +59,7 @@ public class FilesWriter {
     public void generate() throws IOException {
         /* Overwrites resource files and copies them to a destination folder. */
         writeFileTo(tbCodeGen.getParsedFile(), tbCodeGen.getName(), "");
-        writeFileTo(envCodeGen.getParsedFile(), envCodeGen.getName(), "classes");
+        writeFileTo(clkCodeGen.getParsedFile(), clkCodeGen.getName(), "modules");
         writeFileTo(ifaceCodeGen.getParsedFile(), ifaceCodeGen.getName(), "classes");
         writeFileTo(monitorCodeGen.getParsedFile(), monitorCodeGen.getName(), "classes");
         writeFileTo(readCodeGen.getParsedFile(), readCodeGen.getName(), "classes");
@@ -68,8 +68,7 @@ public class FilesWriter {
         /* Copies a resource files to the destination folder without overwriting. */
         copyFileTo(BackendParameters.READ_GENERATOR_SV, "classes");
         copyFileTo(BackendParameters.WRITE_GENERATOR_SV, "classes");
-        copyFileTo(BackendParameters.CLK_HUB_SV, "clocks_hub");
-        copyFileTo(BackendParameters.CLK_DIVIDER_SV, "clocks_hub");
+        copyFileTo(BackendParameters.CLK_GENERATOR_SV, "modules");
     }
 
     /**
@@ -130,19 +129,8 @@ public class FilesWriter {
      */
     public void setWorkingFolder(File workingFolder) {
         this.workingFolder = workingFolder;
-        envCodeGen.setWorkingFolder(workingFolder);
+        tbCodeGen.setWorkingFolder(workingFolder);
         System.out.println("Working folder is set. Folder = " + workingFolder.getAbsolutePath());
-    }
-
-    /**
-     * Sets the ports list of clk_hub.sv module.
-     * Any of that ports can be connected to the DUT
-     * and be used as clock signals.
-     *
-     * @param hubClocks The list of available clocks.
-     */
-    public void setHubClocks(ArrayList<String> hubClocks) {
-        ifaceCodeGen.setHubClocks(hubClocks);
     }
 
     /**
@@ -155,7 +143,9 @@ public class FilesWriter {
      *                      between DUT's and clk_hub's modules.
      */
     public void setClocksHashMap(HashMap<String, String> clocksHashMap) {
-        tbCodeGen.setDutClocksPorts(clocksHashMap);
+        tbCodeGen.setClockDriver(clocksHashMap);
+        clkCodeGen.setDutClocks(clocksHashMap);
+        ifaceCodeGen.setClocks(clocksHashMap);
     }
 
     /**
@@ -163,12 +153,12 @@ public class FilesWriter {
      * Simulation points will be written to the report files
      * every tact of this frequency.
      *
-     * @param reportSamplingFrequency Sampling frequency that is used
-     *                                in the test environment for writing
-     *                                output data to the report file.
+     * @param freq Sampling frequency that is used
+     *             in the test environment for writing
+     *             output data to the report file.
      */
-    public void setReportSamplingFrequency(String reportSamplingFrequency) {
-        tbCodeGen.setReportSamplingFrequency(reportSamplingFrequency);
+    public void setSampleFrequency(String freq) {
+        ifaceCodeGen.setSampleFreq(freq);
     }
 
     /**
@@ -189,7 +179,6 @@ public class FilesWriter {
      */
     public void setParameters(HashMap<String, String> parameters) {
         tbCodeGen.setParameters(parameters);
-        envCodeGen.setParameters(parameters);
         ifaceCodeGen.setParameters(parameters);
         monitorCodeGen.setParameters(parameters);
         readCodeGen.setParameters(parameters);

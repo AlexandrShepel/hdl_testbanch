@@ -16,15 +16,19 @@ interface Interface;
 	// Parameters that are copied from the DUT.
     localparam PARAMETER = 0000;
 
-	// The clock signals that is available in the testbench.
-	logic hub_clocks;
+    // Simulation clocks configuration.
+    localparam SAMPLE_FREQ = 0000;
+    localparam DUT_CLK_FREQ = 0000;
+
+	// Simulation clocks.
+	bit reading_clk;
+	bit writing_clk;
 
 	// DUT inputs:
-	logic dut_clocks;
-	logic dut_inputs;
+	bit dut_inputs;
 
 	// DUT outputs:
-	logic dut_outputs;
+	bit dut_outputs;
 
 
 endinterface

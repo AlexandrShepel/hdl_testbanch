@@ -4,7 +4,6 @@ import alex.shepel.hdl_testbench.backend.filesWriter.FilesWriter;
 import alex.shepel.hdl_testbench.backend.parser.Parser;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,10 +25,6 @@ public class Backend {
     /* Parses DUT.sv file. File must be specified by a user. */
     private Parser dutParser;
 
-    /* Parses clk_hub.sv file.
-    File is specified by default path and stores in the java-archive. */
-    private final Parser clkHubParser;
-
     /* Generates the .sv-classes, clk_hub.sv module
     and tb.sv module that is top level module of the testbench. */
     private final FilesWriter filesWriter;
@@ -39,7 +34,6 @@ public class Backend {
      */
     public Backend() throws IOException {
         filesWriter = new FilesWriter();
-        clkHubParser = new Parser(BackendParameters.CLK_HUB_SV, Parser.INTERNAL_RESOURCE);
     }
 
     /**
@@ -98,7 +92,7 @@ public class Backend {
      *                                output data to the report file.
      */
     public void setReportSamplingFrequency(String reportSamplingFrequency) {
-        filesWriter.setReportSamplingFrequency(reportSamplingFrequency);
+        filesWriter.setSampleFrequency(reportSamplingFrequency);
         System.out.println("reportSamplingFrequency is: " + reportSamplingFrequency);
     }
 
