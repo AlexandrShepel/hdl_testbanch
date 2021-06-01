@@ -1,7 +1,6 @@
-package alex.shepel.hdl_testbench.frontend.configurationPanel.pages;
+package alex.shepel.hdl_testbench.frontend.mainPanel.pages;
 
 import alex.shepel.hdl_testbench.frontend.FrontendParameters;
-import alex.shepel.hdl_testbench.frontend.widgets.ClockSpecificationPanel;
 import alex.shepel.hdl_testbench.frontend.widgets.PresetTextArea;
 
 import javax.swing.*;
@@ -36,10 +35,7 @@ public class Page2 extends JPanel implements FrontendParameters {
 
     /* The panels that allows user to specify connection between
     DUT and "clock_hub" modules. */
-    private final HashMap<String, ClockSpecificationPanel> clockSpecPanels = new HashMap<>();
-
-    /* List of the available clocks in the clock hub. */
-    private ArrayList<String> hubClocks;
+    private HashMap<String, ClockSpecificationPanel> clockSpecPanels = new HashMap<>();
 
     /* The dialog texts that will be displayed on the application window. */
     private static final String PAGE_TEXT_WITH_CLK =
@@ -94,8 +90,7 @@ public class Page2 extends JPanel implements FrontendParameters {
             add(new PresetTextArea(PAGE_TEXT_WITHOUT_CLK));
 
         /* Deletes an old list of the clocks. */
-        for (ClockSpecificationPanel clkPanel: clockSpecPanels.values())
-            remove(clkPanel);
+        clockSpecPanels = new HashMap<>();
 
         /* Sets a new list of the clocks. */
         for (String dutClockName: dutClocks) {
@@ -106,34 +101,59 @@ public class Page2 extends JPanel implements FrontendParameters {
     }
 
     /**
-     * Sets a list of available clocks
-     * that can be connected to the DUT's ports.
-     *
-     * @param hubClocks The ArrayList object
-     *                  that contains a list
-     *                  of available clocks.
-     */
-    public void setHubClocks(ArrayList<String> hubClocks) {
-        this.hubClocks = hubClocks;
-
-        for (String dutClockName: clockSpecPanels.keySet())
-            clockSpecPanels.get(dutClockName).setClocksComboBox(hubClocks);
-    }
-
-    /**
-     * @return List of the available clocks in the clock hub.
-     */
-    public ArrayList<String> getHubClocks() {
-        return hubClocks;
-    }
-
-    /**
      * Returns a name of the page.
      *
      * @return The String value of the page's name.
      */
     public String getName() {
         return PAGE_NAME;
+    }
+
+
+    /** Allows to configure clock signals that will be connected to the DUT clock ports. */
+    private static final class ClockSpecificationPanel extends JPanel implements FrontendParameters {
+
+        final JTextField textField = new JTextField("50000"); {
+            textField.setBorder(BorderFactory.createBevelBorder(1));
+            textField.setFont(PAGE_FONT);
+            textField.setBackground(GREY);
+            textField.setForeground(FONT_COLOR);
+        }
+
+        /**
+         * The class constructor.
+         *
+         * @param clockName The name of the custom clock.
+         */
+        public ClockSpecificationPanel(String clockName) {
+            setBackground(BACKGROUND_COLOR);
+            setLayout(new FlowLayout(FlowLayout.CENTER, 20, 25));
+            setClockLabel(clockName);
+            add(textField);
+            setClockLabel("kHz");
+        }
+
+        /**
+         * Adds JLabel object that represents the label
+         * of custom clock to the panel.
+         *
+         * @param text The label of the custom clock.
+         */
+        private void setClockLabel(String text) {
+            final JLabel label = new JLabel(text);
+            label.setFont(PAGE_FONT);
+            label.setForeground(FONT_COLOR);
+            add(label);
+        }
+
+        /**
+         * Returns the clock that was specified by user.
+         *
+         * @return The String value of clock name.
+         */
+        public String getSpecifiedClock() {
+            return String.valueOf(textField.getText());
+        }
     }
 
 }

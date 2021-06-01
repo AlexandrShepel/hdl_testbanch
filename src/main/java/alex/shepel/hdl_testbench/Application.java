@@ -64,21 +64,17 @@ public class Application implements ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equals("< Back")) {
+        if (e.getActionCommand().equals("< Back"))
             frontend.back();
-        }
 
-        if (e.getActionCommand().equals("Next >")) {
+        if (e.getActionCommand().equals("Next >"))
             if (doBackendAction()) frontend.next();
-        }
 
-        if (e.getActionCommand().equals("Help")) {
+        if (e.getActionCommand().equals("Help"))
             frontend.help();
-        }
 
-        if (e.getActionCommand().equals("Finish")) {
+        if (e.getActionCommand().equals("Finish"))
             frontend.finish();
-        }
     }
 
     /**
@@ -93,50 +89,36 @@ public class Application implements ActionListener {
     private boolean doBackendAction() {
         try {
             switch (frontend.getPageName()) {
-                case "Specify DUT file": {
-                    backend.setDutFile(frontend.getDutFile());
-                    break;
-                }
+                case "Specify DUT file" -> backend.setDutFile(frontend.getDutFile());
 
-                case "Specify working folder": {
+                case "Specify working folder" -> {
                     backend.setWorkingFolder(frontend.getWorkingFolder());
                     frontend.setDutClocks(backend.getDutClocks());
-                    frontend.setHubClocks(backend.getHubClocks());
                     frontend.refresh();
-                    break;
                 }
 
-                case "Specify clocks": {
-                    backend.setClocksHashMap(frontend.getClocksHashMap());
-                    break;
-                }
+                case "Specify clocks" -> backend.setClocksHashMap(frontend.getClocksHashMap());
 
-                case "Specify sampling frequency": {
+                case "Specify sampling frequency" -> {
                     backend.setReportSamplingFrequency(frontend.getReportSamplingFrequency());
                     backend.generateEnvironment();
-                    break;
                 }
 
-                case "Run ModelSim": {
+                case "Run ModelSim" -> {
                     // TODO: implement following methods.
                     // backend.runScoreboard();
                     // frontend.putResults();
-                    break;
                 }
 
-                default:
-                    return false;
+                default -> { return false; }
             }
 
             return true;
         }
 
         catch (NullPointerException | IOException e) {
-            e.printStackTrace();
-
-            /* Shows error message on the app's window. */
             frontend.showExceptionMessage(e);
-
+            e.printStackTrace();
             return false;
         }
     }

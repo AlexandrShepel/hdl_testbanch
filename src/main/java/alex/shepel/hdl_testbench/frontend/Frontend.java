@@ -1,7 +1,7 @@
 package alex.shepel.hdl_testbench.frontend;
 
 import alex.shepel.hdl_testbench.frontend.buttonsPanel.ButtonsPanel;
-import alex.shepel.hdl_testbench.frontend.configurationPanel.ConfigurationPanel;
+import alex.shepel.hdl_testbench.frontend.mainPanel.MainPanel;
 import alex.shepel.hdl_testbench.frontend.helper.Helper;
 import alex.shepel.hdl_testbench.frontend.progressPanel.ProgressPanel;
 import alex.shepel.hdl_testbench.frontend.widgets.PresetButton;
@@ -27,7 +27,7 @@ public class Frontend extends JFrame implements FrontendParameters {
 
     /* Top panel of the app's window.
     Allows user to configure properties of the resulting files. */
-    private static ConfigurationPanel confPanel;
+    private static MainPanel confPanel;
 
     /* Central panel of the app's window.
     Monitors a progress of the configuration. */
@@ -49,7 +49,7 @@ public class Frontend extends JFrame implements FrontendParameters {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         /* Creates panels that will be added to the frame. */
-        confPanel = new ConfigurationPanel();
+        confPanel = new MainPanel();
         progPanel = new ProgressPanel();
         buttPanel = new ButtonsPanel();
 
@@ -165,18 +165,6 @@ public class Frontend extends JFrame implements FrontendParameters {
         }
 
         return confPanel.getWorkingFolder();
-    }
-
-    /**
-     * Sets the ports list of clk_hub.sv module.
-     * Any of that ports can be connected to the DUT
-     * and be used as clock signals.
-     *
-     * @param hubClocks The ArrayList object
-     *                  that contains available clocks.
-     */
-    public void setHubClocks(ArrayList<String> hubClocks) {
-        confPanel.setHubClocks(hubClocks);
     }
 
     /**

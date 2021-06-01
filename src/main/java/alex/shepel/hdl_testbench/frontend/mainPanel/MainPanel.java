@@ -1,12 +1,12 @@
-package alex.shepel.hdl_testbench.frontend.configurationPanel;
+package alex.shepel.hdl_testbench.frontend.mainPanel;
 
 import alex.shepel.hdl_testbench.frontend.FrontendParameters;
-import alex.shepel.hdl_testbench.frontend.configurationPanel.pages.Page0;
-import alex.shepel.hdl_testbench.frontend.configurationPanel.pages.Page2;
-import alex.shepel.hdl_testbench.frontend.configurationPanel.pages.Page1;
-import alex.shepel.hdl_testbench.frontend.configurationPanel.pages.Page3;
-import alex.shepel.hdl_testbench.frontend.configurationPanel.pages.Page4;
-import alex.shepel.hdl_testbench.frontend.configurationPanel.pages.Page5;
+import alex.shepel.hdl_testbench.frontend.mainPanel.pages.Page0;
+import alex.shepel.hdl_testbench.frontend.mainPanel.pages.Page2;
+import alex.shepel.hdl_testbench.frontend.mainPanel.pages.Page1;
+import alex.shepel.hdl_testbench.frontend.mainPanel.pages.Page3;
+import alex.shepel.hdl_testbench.frontend.mainPanel.pages.Page4;
+import alex.shepel.hdl_testbench.frontend.mainPanel.pages.Page5;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,21 +15,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /*
- * File: ConfigurationPanel.java
+ * File: MainPanel.java
  * ------------------------------------------------------------
  * Interactive panel that helps user to create
  * test environment for FPGA design file.
  *
- * Consists of the 5 configuration steps.
+ * Consists of the 5 steps of configuration.
  * Each of them is represented by its own page.
- * See src.alex.shepel.hdl_testbanch.frontend.configurationPanel.pages package.
+ * See .frontend.configurationPanel.pages package.
  *
  * Pages representation is realized
  * with help of changing pages visibility.
  * Thus, when program starts all pages are added to the panel.
  * But only one page is visible at the every moment.
  */
-public class ConfigurationPanel extends JLayeredPane implements FrontendParameters {
+public class MainPanel extends JLayeredPane implements FrontendParameters {
 
     /* Pages that will be added to the panel when program starts. */
     private final Page0 p0 = new Page0();
@@ -42,7 +42,7 @@ public class ConfigurationPanel extends JLayeredPane implements FrontendParamete
     /**
      * The class constructor.
      */
-    public ConfigurationPanel() {
+    public MainPanel() {
         setPreferredSize(new Dimension(APP_WIDTH, IP_HEIGHT));
         setOngoingPage(0);
 
@@ -138,9 +138,7 @@ public class ConfigurationPanel extends JLayeredPane implements FrontendParamete
      */
     private void setClocksComboBox(ArrayList<String> clocks) {
         if (clocks.size() != 0)
-            p3.setClocksComboBox(clocks);
-        else
-            p3.setClocksComboBox(p2.getHubClocks());
+            p3.clockSpecPanel.setComboBox(clocks);
     }
 
     /**
@@ -152,18 +150,6 @@ public class ConfigurationPanel extends JLayeredPane implements FrontendParamete
      */
     public File getWorkingFolder() {
         return p1.getWorkingFolder();
-    }
-
-    /**
-     * Sets a list of available clocks
-     * that can be connected to the DUT's ports.
-     *
-     * @param hubClocks The ArrayList object
-     *                  that contains a list
-     *                  of available clocks.
-     */
-    public void setHubClocks(ArrayList<String> hubClocks) {
-        p2.setHubClocks(hubClocks);
     }
 
     /**
@@ -189,6 +175,6 @@ public class ConfigurationPanel extends JLayeredPane implements FrontendParamete
      *         output data to the report file.
      */
     public String getReportSamplingFrequency() {
-        return p3.getClock();
+        return p3.clockSpecPanel.getClock();
     }
 }

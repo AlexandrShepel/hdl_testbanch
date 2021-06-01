@@ -64,30 +64,6 @@ public class Backend {
     }
 
     /**
-     * Returns the ports list of clk_hub.sv module.
-     * Any of that ports can be connected to the DUT
-     * and be used as clock signals.
-     *
-     * @return The list of available clocks.
-     */
-    public ArrayList<String> getHubClocks() throws FileNotFoundException {
-        /* Checks if clk_hub.sv file exists in the resource directory. */
-        if (clkHubParser.getInputClocks().isEmpty() || clkHubParser.getOutputClocks().isEmpty()) {
-            throw new FileNotFoundException("Check clk_hub.sv file in the java archive. " +
-                    "It does not exist or is corrupted.");
-        }
-
-        /* Prepares clocks for further use in the FilesWriter object. */
-        ArrayList<String> hubClocks = new ArrayList<>();
-        hubClocks.addAll(clkHubParser.getInputClocks());
-        hubClocks.addAll(clkHubParser.getOutputClocks());
-        System.out.println("Hub clocks are: " + hubClocks);
-        filesWriter.setHubClocks(hubClocks);
-
-        return hubClocks;
-    }
-
-    /**
      * Returns the list of clock inputs of the DUT.
      * Gets that data from the Parser object.
      *
