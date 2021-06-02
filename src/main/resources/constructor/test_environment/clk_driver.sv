@@ -37,7 +37,7 @@ module clk_driver #(
     // Creates clock that drives writing to the file and console.
     clk_generator #(
         .FREQ       (SAMPLE_FREQ),
-        .PHASE      (270),
+        .PHASE      (300),
         .DUTY       (50)
     ) writing_clk_gen (
         .enable     (enable),

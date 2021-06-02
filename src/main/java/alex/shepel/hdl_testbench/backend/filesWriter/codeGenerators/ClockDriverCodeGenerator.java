@@ -12,7 +12,7 @@ public class ClockDriverCodeGenerator extends CodeGenerator {
     private static final String[] CLK_GEN_INSTANCE = {
         "\tclk_generator #(",
         "\t\t.FREQ       (DUT_CLK_FREQ),",
-        "\t\t.PHASE      (1),",
+        "\t\t.PHASE      (0),",
         "\t\t.DUTY       (50)",
         "\t) dut_clk_gen (",
         "\t\t.enable     (enable),",

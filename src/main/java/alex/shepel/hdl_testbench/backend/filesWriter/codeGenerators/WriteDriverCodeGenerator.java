@@ -79,7 +79,7 @@ public class WriteDriverCodeGenerator extends CodeGenerator {
                 addGeneratorsInitialization(++index, outputs);
 
             /* Fills in WriteGenerator running field. */
-            else if (get(index).contains("function run()"))
+            else if (get(index).contains("function void run()"))
                 addGeneratorsRunning(++index, outputs);
         }
     }

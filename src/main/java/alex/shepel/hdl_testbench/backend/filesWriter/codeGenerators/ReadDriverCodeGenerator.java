@@ -94,7 +94,7 @@ public class ReadDriverCodeGenerator extends CodeGenerator {
                 addGeneratorsInitialization(++index, inputs);
 
             /* Fills in ReadGenerator running field. */
-            else if (get(index).contains("function run()"))
+            else if (get(index).contains("function void run()"))
                 addGeneratorsRunning(++index, inputs);
 
             /* Fills in body of the function that controls correctness of input data. */
