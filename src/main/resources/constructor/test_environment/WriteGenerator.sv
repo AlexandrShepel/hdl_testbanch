@@ -52,7 +52,7 @@ class WriteGenerator #(
         Creates the specified file for writing.
         Overwrites if it exists.
     */
-    function open(string filePath);
+    function void open(string filePath);
         fd = $fopen(filePath, "w");
     endfunction
 
@@ -60,7 +60,7 @@ class WriteGenerator #(
     /*
         Writes the data, that is processed by DUT, to a file.
     */
-    function write(logic [DATA_WIDTH - 1 : 0] dutResult);
+    function void write(logic [DATA_WIDTH - 1 : 0] dutResult);
         $fdisplay(fd, "%0d", dutResult);
     endfunction
 

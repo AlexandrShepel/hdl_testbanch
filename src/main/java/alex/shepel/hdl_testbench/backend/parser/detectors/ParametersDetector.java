@@ -78,6 +78,9 @@ public class ParametersDetector {
         String[] regularSymbols = {" ", "\t", "\n", ",", ";", ")"};
         String[] specificSymbols = {"#(", "parameter"};
 
+        if (codeLine.contains("//"))
+            codeLine = codeLine.substring(0, codeLine.indexOf("//"));
+
         /* Removes regular symbols. */
         for (String symbol: regularSymbols) {
             while (codeLine.contains(symbol)) {

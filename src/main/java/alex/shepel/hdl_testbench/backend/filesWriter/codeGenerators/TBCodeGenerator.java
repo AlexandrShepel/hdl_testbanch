@@ -138,7 +138,7 @@ public class TBCodeGenerator extends CodeGenerator {
             }
 
             /* Sets clock driver ports. */
-            if (get(index).contains("\t\t.dut_clk")) {
+            if (get(index).contains(".dut_clk")) {
                 remove(index);
 
                 for (String name : clocksHashMap.keySet()) {

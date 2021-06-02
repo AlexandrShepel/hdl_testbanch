@@ -26,10 +26,10 @@ module tb ();
 	// The interface is based on the ports and parameters lists of the DUT.
     Interface iface();
 
-    // Path to the files that will be read.
+    // Path to the folder with files that will be read.
 	const string READ_FILES = "./readFolder/";
 
-    // Path to the files that will be written.
+    // Path to the folder with files that will be written.
 	const string WRITE_FILES = "./writeFolder/";
 
     // The objects of the test environment.

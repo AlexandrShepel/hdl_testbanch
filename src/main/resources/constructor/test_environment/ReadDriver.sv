@@ -43,16 +43,16 @@ class ReadDriver #(
     /* 
         Initializes the generators. 
     */
-    local task initGens();
+    local function void initGens();
 
         isOneSize();
-    endtask
+    endfunction
 
 
     /*
         Starts to assign a data to the DUT ports. 
     */
-    function run();
+    function void run();
     endfunction
 
 

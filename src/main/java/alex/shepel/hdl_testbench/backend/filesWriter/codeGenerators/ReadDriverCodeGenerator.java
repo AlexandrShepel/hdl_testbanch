@@ -90,7 +90,7 @@ public class ReadDriverCodeGenerator extends CodeGenerator {
             }
 
             /* Fills in ReadGenerator initialization field. */
-            else if (get(index).contains("local task initGens();"))
+            else if (get(index).contains("local function void initGens();"))
                 addGeneratorsInitialization(++index, inputs);
 
             /* Fills in ReadGenerator running field. */

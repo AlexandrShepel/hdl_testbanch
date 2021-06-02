@@ -62,7 +62,7 @@ class ReadGenerator #(
         Opens the file, that is located at a specified address.
         Reads the test input vector from the file.
     */
-    function open(string filePath);
+    function void open(string filePath);
         integer getFaults, scanFaults;
         string fileLine;    // The store box for the line of the file, that will be read below.
         this.filePath = filePath;
@@ -107,7 +107,7 @@ class ReadGenerator #(
     /*
         Sets the point index of the testing vector.
     */
-    function setIndex(int index);
+    function void setIndex(int index);
         if (index >= this.vector.size()) begin
             $display("ERROR: The index %0d is out of the vector size.", index);
             $display("       Vector indexes must be in range [0 : %0d].", this.vector.size() - 1);

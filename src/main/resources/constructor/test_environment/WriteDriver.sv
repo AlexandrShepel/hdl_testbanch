@@ -47,14 +47,14 @@ class WriteDriver #(
     /* 
         Initializes the generators. 
     */
-    local task initGens();
-    endtask
+    local function void initGens();
+    endfunction
 
 
     /*
         Starts to write a data to the resulting file. 
     */
-    function run();
+    function void run();
     endfunction
 
 

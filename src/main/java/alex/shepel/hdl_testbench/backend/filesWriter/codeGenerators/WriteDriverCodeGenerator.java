@@ -75,7 +75,7 @@ public class WriteDriverCodeGenerator extends CodeGenerator {
             }
 
             /* Fills in WriteGenerator initialization field. */
-            else if (get(index).contains("local task initGens();"))
+            else if (get(index).contains("local function void initGens();"))
                 addGeneratorsInitialization(++index, outputs);
 
             /* Fills in WriteGenerator running field. */
