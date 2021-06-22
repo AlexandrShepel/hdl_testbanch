@@ -76,20 +76,4 @@ public class PortDescriptor {
         return toString;
     }
 
-    /**
-     * Collects port's properties to a new PortDescriptor object
-     * with preset properties.
-     * Allows to copy a port properties to another PortDescriptor object.
-     *
-     * @param portDescriptor The new PortDescriptor object
-     *                       with preset properties.
-     */
-    public void copyDescription(PortDescriptor portDescriptor) {
-        name = portDescriptor.getName();
-        type = portDescriptor.getType();
-        signed = portDescriptor.getSigned();
-        packedSize = portDescriptor.getPackedSize();
-        unpackedSize = portDescriptor.getUnpackedSize();
-    }
-
 }

@@ -33,17 +33,9 @@ public class PortsDetector {
      *                   of parsed file.
      */
     private void createPortsHashMap(ArrayList<String> parsedFile) {
-        for (String codeLine: parsedFile) {
-            if (isInputDeclaration(codeLine)) {
-                codeLine = codeLine.replace("input", "");
-                inputs.putAll(getPorts(codeLine));
-            }
-
-            else if (isOutputDeclaration(codeLine)) {
-                codeLine = codeLine.replace("output", "");
-                outputs.putAll(getPorts(codeLine));
-            }
-        }
+        for (String codeLine: parsedFile)
+            if (isPortDeclaration(codeLine))
+                parsePorts(codeLine);
     }
 
     /**
@@ -54,62 +46,49 @@ public class PortsDetector {
      * @return The boolean "true" value, if ongoing code line
      *         contains an input declaration. Else "false".
      */
-    private boolean isInputDeclaration(String codeLine) {
-        boolean isInputFound = codeLine.contains("\tinput ") || codeLine.contains(" input ");
-        boolean isTypeFound = codeLine.contains("logic") || codeLine.contains("wire") || codeLine.contains("reg");
-        return isInputFound && isTypeFound;
-    }
-
-    /**
-     * Checks if ongoing line of code contains output declaration.
-     *
-     * @param codeLine The String value that contains
-     *                 a separate line of code.
-     * @return The boolean "true" value, if ongoing code line
-     *         contains an output declaration. Else "false".
-     */
-    private boolean isOutputDeclaration(String codeLine) {
-        boolean isOutputFound = codeLine.contains("\toutput ") || codeLine.contains(" output ");
-        boolean isTypeFound = codeLine.contains("logic") || codeLine.contains("wire") || codeLine.contains("reg");
-        return isOutputFound && isTypeFound;
+    private boolean isPortDeclaration(final String codeLine) {
+        final String cleanLine = deleteSpacings(codeLine);
+        boolean isComment = cleanLine.startsWith("//");
+        boolean isInputOutputFound = cleanLine.contains("input") || cleanLine.contains("output");
+        boolean isTypeFound = cleanLine.contains("logic") || cleanLine.contains("wire") || cleanLine.contains("reg");
+        return !isComment && isInputOutputFound && isTypeFound;
     }
 
     /**
      * Returns all ports that are written in the ongoing line of code.
      *
-     * @param codeLine The String value that contains
-     *                 a separate line of code.
-     * @return The HashMap object.
-     *         Key contains a name of a found port.
-     *         Value stores a full information about port
-     *         as PortDescriptor object.
+     * @param portDeclaration The String value that contains
+     *                        a separate line of code with
+     *                        the port(-s) declaration.
      */
-    private HashMap<String, PortDescriptor> getPorts(String codeLine) {
-        PortDescriptor descriptor = new PortDescriptor();
-        HashMap<String, PortDescriptor> ports = new HashMap<>();
+    private void parsePorts(final String portDeclaration) {
+        final PortDescriptor descriptor = new PortDescriptor();
+        final String cleanDeclaration = deleteSpacings(portDeclaration);
 
-        codeLine = deleteSpacings(codeLine);
+        final boolean isInput = portDeclaration.contains("input");
+        descriptor.setType(getPortType(cleanDeclaration));
+        descriptor.setSigned(getSigned(cleanDeclaration));
+        descriptor.setPackedSize(getPackedSize(cleanDeclaration));
+        descriptor.setUnpackedSize(getUnpackedSize(cleanDeclaration));
 
-        descriptor.setType(getPortType(codeLine));
-        codeLine = codeLine.replace(descriptor.getType(), "");
+        for (String name: getPortsNames(cleanDeclaration, descriptor)) {
+            descriptor.setName(name);
 
-        descriptor.setSigned(getSigned(codeLine));
-        codeLine = codeLine.replace(descriptor.getSigned(), "");
-
-        descriptor.setPackedSize(getPackedSize(codeLine));
-        codeLine = codeLine.replace(descriptor.getPackedSize(), "");
-
-        descriptor.setUnpackedSize(getUnpackedSize(codeLine));
-        codeLine = codeLine.replace(descriptor.getUnpackedSize(), "");
-
-        for (String name: codeLine.split(",")) {
-            PortDescriptor finalDescriptor = new PortDescriptor();
-            finalDescriptor.copyDescription(descriptor);
-            finalDescriptor.setName(name);
-            ports.put(finalDescriptor.getName(), finalDescriptor);
+            if (isInput)
+                inputs.put(descriptor.getName(), descriptor);
+            else
+                outputs.put(descriptor.getName(), descriptor);
         }
+    }
 
-        return ports;
+    private String[] getPortsNames(String portsDeclaration, final PortDescriptor descriptor) {
+        portsDeclaration = portsDeclaration.replace("input", "").replace("output", "");
+        portsDeclaration = portsDeclaration.replace(descriptor.getType(), "");
+        portsDeclaration = portsDeclaration.replace(descriptor.getSigned(), "");
+        portsDeclaration = portsDeclaration.replace(descriptor.getPackedSize(), "");
+        portsDeclaration = portsDeclaration.replace(descriptor.getUnpackedSize(), "");
+
+        return portsDeclaration.split(",");
     }
 
     /**
@@ -123,11 +102,8 @@ public class PortsDetector {
     private String deleteSpacings(String codeLine) {
         String[] spacingSymbols = {" ", "\t", "\n"};
 
-        for (String symbol: spacingSymbols) {
-            while (codeLine.contains(symbol)) {
-                codeLine = codeLine.replace(symbol, "");
-            }
-        }
+        for (String symbol: spacingSymbols)
+            codeLine = codeLine.replace(symbol, "");
 
         return codeLine;
     }
@@ -135,22 +111,21 @@ public class PortsDetector {
     /**
      * Returns a type of a specified port.
      *
-     * @param codeLine The String value that contains
-     *                 a separate line of code.
+     * @param portDeclaration The String value that contains
+     *                        a separate line of code with
+     *                        the declaration of port.
      * @return The string value of a port's type.
      *         If port does not have any type,
      *         returns a "logic" type that is used by default.
      */
-    private String getPortType(String codeLine) {
+    private String getPortType(String portDeclaration) {
         String[] portTypes = {"logic", "wire", "reg"};
 
-        for (String portType: portTypes) {
-            if (codeLine.contains(portType)) {
+        for (String portType: portTypes)
+            if (portDeclaration.contains(portType))
                 return portType;
-            }
-        }
 
-        return "logic";
+        return "";
     }
 
     /**
@@ -162,9 +137,8 @@ public class PortsDetector {
      *         If port is not signed, returns empty string.
      */
     private String getSigned(String codeLine) {
-        if (codeLine.contains("signed")) {
+        if (codeLine.contains("signed"))
             return "signed";
-        }
 
         return "";
     }
@@ -178,9 +152,8 @@ public class PortsDetector {
      *         If port is not packed, returns empty string.
      */
     private String getPackedSize(String codeLine) {
-        if (codeLine.indexOf('[') == 0) {
+        if (codeLine.indexOf('[') == 0)
             return codeLine.substring(codeLine.indexOf('['), codeLine.indexOf(']') + 1);
-        }
 
         return "";
     }
@@ -194,9 +167,8 @@ public class PortsDetector {
      *         If port is not unpacked, returns empty string.
      */
     private String getUnpackedSize(String codeLine) {
-        if ((codeLine.indexOf("]") == codeLine.length() - 1) || (codeLine.indexOf("]") == codeLine.length() - 2)) {
+        if ((codeLine.indexOf("]") == codeLine.length() - 1) || (codeLine.indexOf("]") == codeLine.length() - 2))
             return codeLine.substring(codeLine.indexOf('['), codeLine.indexOf(']') + 1);
-        }
 
         return "";
     }
