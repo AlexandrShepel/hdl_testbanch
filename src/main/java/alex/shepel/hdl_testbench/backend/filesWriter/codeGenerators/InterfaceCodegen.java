@@ -13,7 +13,7 @@ import java.util.HashMap;
  * Overwrites "BackendParameters.INTERFACE_SV" file
  * based on specified data.
  */
-public class InterfaceCodeGenerator extends CodeGenerator {
+public class InterfaceCodegen extends Codegen {
 
     /**
      * The class constructor.
@@ -21,7 +21,7 @@ public class InterfaceCodeGenerator extends CodeGenerator {
      * @throws IOException "Interface.sv" file can't be read
      *                     (file stores in the resource directory).
      */
-    public InterfaceCodeGenerator() throws IOException {
+    public InterfaceCodegen() throws IOException {
         parseFile(BackendParameters.INTERFACE_SV);
         setDate();
     }

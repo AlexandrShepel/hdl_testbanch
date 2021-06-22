@@ -13,7 +13,7 @@ import java.util.HashMap;
  * Overwrites "BackendParameters.WRITE_DRIVER_SV" file
  * based on specified data.
  */
-public class WriteDriverCodeGenerator extends CodeGenerator {
+public class WriteDriverCodegen extends Codegen {
 
     /* The template of code for initialization of WriteGenerator object.
     Used when unpacked size of input port equals to 0. */
@@ -51,7 +51,7 @@ public class WriteDriverCodeGenerator extends CodeGenerator {
      * @throws IOException "WriteDriver.sv" file can't be read
      *                     (file stores in the resource directory).
      */
-    public WriteDriverCodeGenerator() throws IOException {
+    public WriteDriverCodegen() throws IOException {
         parseFile(BackendParameters.WRITE_DRIVER_SV);
         setDate();
     }
@@ -66,7 +66,7 @@ public class WriteDriverCodeGenerator extends CodeGenerator {
      *              Key contain a port name.
      *              Value contain PortDescriptor object.
      */
-    public void addPorts(HashMap<String, PortDescriptor> outputs) {
+    public void setOutputs(HashMap<String, PortDescriptor> outputs) {
         for (int index = 0; index < size(); index++) {
             /* Adds WriteGenerator object declaration. */
             if (get(index).contains("WriteGenerator #(DATA_WIDTH) gen_port_name [PORTS_NUM]")) {

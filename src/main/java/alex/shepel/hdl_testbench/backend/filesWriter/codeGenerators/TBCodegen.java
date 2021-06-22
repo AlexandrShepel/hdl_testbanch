@@ -14,7 +14,7 @@ import java.util.HashMap;
  * Overwrites "BackendParameters.TB_SV" file
  * based on specified data.
  */
-public class TBCodeGenerator extends CodeGenerator {
+public class TBCodegen extends Codegen {
 
     /* The working folder, where must be placed generated file. */
     private File workingFolder;
@@ -30,7 +30,7 @@ public class TBCodeGenerator extends CodeGenerator {
      * @throws IOException "Environment.sv" file can't be read
      *                     (file stores in the resource directory).
      */
-    public TBCodeGenerator() throws IOException {
+    public TBCodegen() throws IOException {
         parseFile(BackendParameters.TB_SV);
         setDate();
     }

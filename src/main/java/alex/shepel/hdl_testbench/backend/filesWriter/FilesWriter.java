@@ -29,12 +29,12 @@ public class FilesWriter {
     private File workingFolder;
 
     /* Files creators. */
-    private final TBCodeGenerator tbCodeGen;
-    private final ClockDriverCodeGenerator clkCodeGen;
-    private final InterfaceCodeGenerator ifaceCodeGen;
-    private final MonitorCodeGenerator monitorCodeGen;
-    private final ReadDriverCodeGenerator readCodeGen;
-    private final WriteDriverCodeGenerator writeCodeGen;
+    private final TBCodegen tbCodegen;
+    private final ClockDriverCodegen clkCodegen;
+    private final InterfaceCodegen ifaceCodegen;
+    private final CheckerCodegen checkerCodegen;
+    private final ReadDriverCodegen readCodeGen;
+    private final WriteDriverCodegen writeCodeGen;
 
     /**
      * The class constructor.
@@ -43,12 +43,12 @@ public class FilesWriter {
      *                     when initialization of generators.
      */
     public FilesWriter() throws IOException {
-        tbCodeGen = new TBCodeGenerator();
-        clkCodeGen = new ClockDriverCodeGenerator();
-        ifaceCodeGen = new InterfaceCodeGenerator();
-        monitorCodeGen = new MonitorCodeGenerator();
-        readCodeGen = new ReadDriverCodeGenerator();
-        writeCodeGen = new WriteDriverCodeGenerator();
+        tbCodegen = new TBCodegen();
+        clkCodegen = new ClockDriverCodegen();
+        ifaceCodegen = new InterfaceCodegen();
+        checkerCodegen = new CheckerCodegen();
+        readCodeGen = new ReadDriverCodegen();
+        writeCodeGen = new WriteDriverCodegen();
     }
 
     /**
@@ -58,10 +58,10 @@ public class FilesWriter {
      */
     public void generate() throws IOException {
         /* Overwrites resource files and copies them to a destination folder. */
-        writeFileTo(tbCodeGen.getParsedFile(), tbCodeGen.getName(), "");
-        writeFileTo(clkCodeGen.getParsedFile(), clkCodeGen.getName(), "modules");
-        writeFileTo(ifaceCodeGen.getParsedFile(), ifaceCodeGen.getName(), "classes");
-        writeFileTo(monitorCodeGen.getParsedFile(), monitorCodeGen.getName(), "classes");
+        writeFileTo(tbCodegen.getParsedFile(), tbCodegen.getName(), "");
+        writeFileTo(clkCodegen.getParsedFile(), clkCodegen.getName(), "modules");
+        writeFileTo(ifaceCodegen.getParsedFile(), ifaceCodegen.getName(), "classes");
+        writeFileTo(checkerCodegen.getParsedFile(), checkerCodegen.getName(), "classes");
         writeFileTo(readCodeGen.getParsedFile(), readCodeGen.getName(), "classes");
         writeFileTo(writeCodeGen.getParsedFile(), writeCodeGen.getName(), "classes");
 
@@ -115,7 +115,7 @@ public class FilesWriter {
      * @throws IOException The error of copying a new files.
      */
     private void copyFileTo(String file, String newDirectoryName) throws IOException {
-        CodeGenerator codeGen = new CodeGenerator();
+        Codegen codeGen = new Codegen();
         codeGen.parseFile(file);
         writeFileTo(codeGen.getParsedFile(), codeGen.getName(), newDirectoryName);
     }
@@ -129,7 +129,7 @@ public class FilesWriter {
      */
     public void setWorkingFolder(File workingFolder) {
         this.workingFolder = workingFolder;
-        tbCodeGen.setWorkingFolder(workingFolder);
+        tbCodegen.setWorkingFolder(workingFolder);
         System.out.println("Working folder is set. Folder = " + workingFolder.getAbsolutePath());
     }
 
@@ -143,9 +143,9 @@ public class FilesWriter {
      *                      between DUT's and clk_hub's modules.
      */
     public void setClocksHashMap(HashMap<String, String> clocksHashMap) {
-        tbCodeGen.setClockDriver(clocksHashMap);
-        clkCodeGen.setDutClocks(clocksHashMap);
-        ifaceCodeGen.setClocks(clocksHashMap);
+        tbCodegen.setClockDriver(clocksHashMap);
+        clkCodegen.setDutClocks(clocksHashMap);
+        ifaceCodegen.setClocks(clocksHashMap);
     }
 
     /**
@@ -158,7 +158,7 @@ public class FilesWriter {
      *             output data to the report file.
      */
     public void setSampleFrequency(String freq) {
-        ifaceCodeGen.setSampleFreq(freq);
+        ifaceCodegen.setSampleFreq(freq);
     }
 
     /**
@@ -167,7 +167,7 @@ public class FilesWriter {
      * @param name The name of a DUT module.
      */
     public void setDutName(String name) {
-        tbCodeGen.setDutName(name);
+        tbCodegen.setDutName(name);
     }
 
     /**
@@ -178,9 +178,9 @@ public class FilesWriter {
      *                   and values of DUT's parameters.
      */
     public void setParameters(HashMap<String, String> parameters) {
-        tbCodeGen.setParameters(parameters);
-        ifaceCodeGen.setParameters(parameters);
-        monitorCodeGen.setParameters(parameters);
+        tbCodegen.setParameters(parameters);
+        ifaceCodegen.setParameters(parameters);
+        checkerCodegen.setParameters(parameters);
         readCodeGen.setParameters(parameters);
         writeCodeGen.setParameters(parameters);
     }
@@ -193,10 +193,10 @@ public class FilesWriter {
      *              and descriptions of DUT's outputs.
      */
     public void setDutOutputs(HashMap<String, PortDescriptor> ports) {
-        tbCodeGen.setOutputs(ports);
-        ifaceCodeGen.setDutOutputs(ports);
-        monitorCodeGen.addPorts(ports);
-        writeCodeGen.addPorts(ports);
+        tbCodegen.setOutputs(ports);
+        ifaceCodegen.setDutOutputs(ports);
+        checkerCodegen.setOutputs(ports);
+        writeCodeGen.setOutputs(ports);
     }
 
     /**
@@ -207,9 +207,8 @@ public class FilesWriter {
      *              and descriptions of DUT's inputs.
      */
     public void setDutInputs(HashMap<String, PortDescriptor> ports) {
-        tbCodeGen.setInputs(ports);
-        ifaceCodeGen.setDutInputs(ports);
-        monitorCodeGen.addPorts(ports);
-        readCodeGen.addPorts(ports);
+        tbCodegen.setInputs(ports);
+        ifaceCodegen.setDutInputs(ports);
+        readCodeGen.setInputs(ports);
     }
 }

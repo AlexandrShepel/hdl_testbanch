@@ -16,8 +16,8 @@ public interface BackendParameters {
             "constructor/tb.sv";
     String INTERFACE_SV =
             "constructor/test_environment/Interface.sv";
-    String MONITOR_SV =
-            "constructor/test_environment/Monitor.sv";
+    String CHECKER_SV =
+            "constructor/test_environment/Checker.sv";
     String READ_DRIVER_SV =
             "constructor/test_environment/ReadDriver.sv";
     String WRITE_DRIVER_SV =

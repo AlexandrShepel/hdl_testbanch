@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Set;
 
 /*
  * File: CodeGenerator.java
@@ -15,7 +16,7 @@ import java.util.HashMap;
  * Saves it as list of code lines.
  * Overwrites existing code lines if needed.
  */
-public class CodeGenerator extends ArrayList<String> {
+public class Codegen extends ArrayList<String> {
 
     /* Properties of a file that can be overwritten. */
     private HashMap<String, String> parameters;
@@ -147,12 +148,13 @@ public class CodeGenerator extends ArrayList<String> {
      * @return The unpacked size of port in a number format.
      */
     public String decodeSizeReferencing(String codedSize) {
+        if (codedSize.length() == 0)
+            return "";
+
         /* When size is described by parameter's name. */
-        for (String name: getParameters().keySet()) {
-            if (codedSize.contains(name)) {
+        for (String name: getParameters().keySet())
+            if (codedSize.contains(name))
                 return name + " - 1";
-            }
-        }
 
         /* When size is described by a number. */
         int begIndex = codedSize.indexOf('[') + 1;
@@ -185,11 +187,9 @@ public class CodeGenerator extends ArrayList<String> {
             /* Port's width larger then 1 bit. */
         else {
             /* When size is described by parameter's name. */
-            for (String name : getParameters().keySet()) {
-                if (codedSize.contains(name)) {
+            for (String name : getParameters().keySet())
+                if (codedSize.contains(name))
                     return name;
-                }
-            }
 
             /* When size is described by a number. */
             int begIndex = codedSize.indexOf('[') + 1;

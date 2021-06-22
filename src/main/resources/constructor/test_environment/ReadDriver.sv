@@ -57,9 +57,25 @@ class ReadDriver #(
 
 
     /*
+        Checks the end of the test vector.
+    */
+    function bit isEnding();
+        return gen_port_name.getIndex() >= gen_port_name.getSize() - 1;
+    endfunction
+
+
+    /*
+        Returns the size of the test vector.
+    */
+    function int getSize();
+        return gen_port_name.getSize();
+    endfunction
+
+
+    /*
         Checks that generators contains equal number of the simulation points.
     */
-    local function bit isOneSize();
+    local function void checkSize();
         bit isTrue = 1;
         
         if (!isTrue) begin
@@ -68,8 +84,6 @@ class ReadDriver #(
             $display ("         Notice that empty strings are read as zeros by default.");
             $stop();
         end
-
-        return isTrue;        
     endfunction
 
 

@@ -5,7 +5,7 @@ import alex.shepel.hdl_testbench.backend.BackendParameters;
 import java.io.IOException;
 import java.util.HashMap;
 
-public class ClockDriverCodeGenerator extends CodeGenerator {
+public class ClockDriverCodegen extends Codegen {
 
     /* The template of code.
     Used when packed and unpacked sizes of monitored port equals to 0. */
@@ -27,7 +27,7 @@ public class ClockDriverCodeGenerator extends CodeGenerator {
      * @throws IOException "clk_driver.sv" file can't be read
      *                     (file stores in the resource directory).
      */
-    public ClockDriverCodeGenerator() throws IOException {
+    public ClockDriverCodegen() throws IOException {
         parseFile(BackendParameters.CLK_DRIVER_SV);
         setDate();
     }
