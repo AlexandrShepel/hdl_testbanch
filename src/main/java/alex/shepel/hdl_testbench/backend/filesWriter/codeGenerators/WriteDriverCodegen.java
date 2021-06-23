@@ -17,31 +17,39 @@ public class WriteDriverCodegen extends Codegen {
 
     /* The template of code for initialization of WriteGenerator object.
     Used when unpacked size of input port equals to 0. */
-    private static final String[] GENERATOR_INITIALIZATION_0UNPACKED_SIZE = {
+    private static final String[] GENERATOR_INIT = {
             "\t\tthis.gen_port_name = new();",
             "\t\tthis.gen_port_name.open({$sformatf(\"%s\", filePath), \"/port_name.txt\"});",
+            "",
+            "\t\tthis.gen_port_name_mismatch = new();",
+            "\t\tthis.gen_port_name_mismatch.open({$sformatf(\"%s\", filePath), \"/port_name_mismatch.txt\"});",
     };
 
     /* The template of code for initialization of WriteGenerator object.
     Used when unpacked size of input port larger then 0. */
-    private static final String[] GENERATOR_INITIALIZATION_DEFAULT_SIZE = {
+    private static final String[] GENERATOR_INIT_UNPACKED = {
             "\t\tfor (int i = 0; i <= PARAMETER - 1; i++) begin",
             "\t\t    this.gen_port_name[i] = new();",
             "\t\t    this.gen_port_name[i].open({$sformatf(\"%s\", filePath), \"/port_name_\", $sformatf(\"%0d\", i), \".txt\"});",
+            "",
+            "\t\t    this.gen_port_name_mismatch[i] = new();",
+            "\t\t    this.gen_port_name_mismatch[i].open({$sformatf(\"%s\", filePath), \"/port_name_mismatch_\", $sformatf(\"%0d\", i), \".txt\"});",
             "\t\tend"
     };
 
     /* The template of code for running of WriteGenerator object.
     Used when unpacked size of input port equals to 0. */
-    private static final String[] GENERATOR_RUNNING_0UNPACKED_SIZE = {
-            "\t\tthis.gen_port_name.write(iface.port_name);"
+    private static final String[] GENERATOR_RUN = {
+            "\t\tthis.gen_port_name.write(iface.port_name);",
+            "\t\tthis.gen_port_name_mismatch.write(iface.port_name_mismatch);",
     };
 
     /* The template of code for running of WriteGenerator object.
     Used when unpacked size of input port larger then 0. */
-    private static final String[] GENERATOR_RUNNING_DEFAULT_SIZE = {
+    private static final String[] GENERATOR_RUN_UNPACKED = {
             "\t\tfor (int i = 0; i <= PARAMETER - 1; i++) begin",
             "\t\t    this.gen_port_name[i].write(iface.port_name[i]);",
+            "\t\t    this.gen_port_name_mismatch[i].write(iface.port_name_mismatch[i]);",
             "\t\tend"
     };
 
@@ -69,101 +77,19 @@ public class WriteDriverCodegen extends Codegen {
     public void setOutputs(HashMap<String, PortDescriptor> outputs) {
         for (int index = 0; index < size(); index++) {
             /* Adds WriteGenerator object declaration. */
-            if (get(index).contains("WriteGenerator #(DATA_WIDTH) gen_port_name [PORTS_NUM]")) {
+            if (get(index).contains("WriteGenerator #(DATA_WIDTH) gen_port_name [PORTS_NUM]; // outputs")) {
                 remove(index);
                 addGeneratorsDeclaration(index, outputs);
             }
 
             /* Fills in WriteGenerator initialization field. */
             else if (get(index).contains("local function void initGens();"))
-                addGeneratorsInitialization(++index, outputs);
+                definePackingAddPort(false, ++index, outputs, GENERATOR_INIT, GENERATOR_INIT_UNPACKED);
 
             /* Fills in WriteGenerator running field. */
             else if (get(index).contains("function void run()"))
-                addGeneratorsRunning(++index, outputs);
+                definePackingAddPort(false, ++index, outputs, GENERATOR_RUN, GENERATOR_RUN_UNPACKED);
         }
-    }
-
-    /**
-     * Adds a code lines for running of WriteGenerator objects.
-     *
-     * @param index The index of a line in the parsed file
-     *              where must be placed current code.
-     * @param outputs The HashMap object that contains DUT's outputs.
-     *              Key contain a port name.
-     *              Value contain PortDescriptor object.
-     */
-    private void addGeneratorsRunning(int index, HashMap<String, PortDescriptor> outputs) {
-        for (String name: outputs.keySet()) {
-            /* When unpacked size of port equals 0. */
-            if (outputs.get(name).getUnpackedSize().equals("")) {
-                for (int lineNum = GENERATOR_RUNNING_0UNPACKED_SIZE.length - 1; lineNum >= 0; lineNum--) {
-                    String editedLine = GENERATOR_RUNNING_0UNPACKED_SIZE[lineNum].replace(
-                            "port_name", name);
-                    editedLine = editedLine.replace("port_name", name);
-                    add(index, editedLine);
-                }
-            }
-
-            /* When unpacked size of port is larger then 0. */
-            else {
-                String unpackedSize = decodeSizeReferencing(outputs.get(name).getUnpackedSize());
-
-                for (int lineNum = GENERATOR_RUNNING_DEFAULT_SIZE.length - 1; lineNum >= 0; lineNum--) {
-                    String editedLine = GENERATOR_RUNNING_DEFAULT_SIZE[lineNum].replace(
-                            "port_name", name);
-                    editedLine = editedLine.replace("port_name", name);
-                    editedLine = editedLine.replace("PARAMETER - 1", decodeSizeReferencing(unpackedSize));
-                    add(index, editedLine);
-                }
-            }
-
-            add(index, "\t\t// Port: " + outputs.get(name).toString());
-            add(index, "");
-        }
-
-        remove(index);
-    }
-
-    /**
-     * Adds a code lines for initialization of WriteGenerator objects.
-     *
-     * @param index The index of a line in the parsed file
-     *              where must be placed current code.
-     * @param outputs The HashMap object that contains DUT's outputs.
-     *              Key contain a port name.
-     *              Value contain PortDescriptor object.
-     */
-    private void addGeneratorsInitialization(int index, HashMap<String, PortDescriptor> outputs) {
-        for (String name: outputs.keySet()) {
-            /* When unpacked size of port equals 0. */
-            if (outputs.get(name).getUnpackedSize().equals("")) {
-                for (int lineNum = GENERATOR_INITIALIZATION_0UNPACKED_SIZE.length - 1; lineNum >= 0; lineNum--) {
-                    String editedLine = GENERATOR_INITIALIZATION_0UNPACKED_SIZE[lineNum].replace(
-                            "port_name", name);
-                    editedLine = editedLine.replace("port_name", name);
-                    add(index, editedLine);
-                }
-            }
-
-            /* When unpacked size of port is larger then 0. */
-            else {
-                String unpackedSize = decodeSizeReferencing(outputs.get(name).getUnpackedSize());
-
-                for (int lineNum = GENERATOR_INITIALIZATION_DEFAULT_SIZE.length - 1; lineNum >= 0; lineNum--) {
-                    String editedLine = GENERATOR_INITIALIZATION_DEFAULT_SIZE[lineNum].replace(
-                            "port_name", name);
-                    editedLine = editedLine.replace("port_name", name);
-                    editedLine = editedLine.replace("PARAMETER - 1", decodeSizeReferencing(unpackedSize));
-                    add(index, editedLine);
-                }
-            }
-
-            add(index, "\t\t// Port: " + outputs.get(name).toString());
-            add(index, "");
-        }
-
-        remove(index);
     }
 
     /**
@@ -181,7 +107,9 @@ public class WriteDriverCodegen extends Codegen {
             if (outputs.get(name).getUnpackedSize().equals("")) {
                 String packedSize = decodeSizeDeclaration(outputs.get(name).getPackedSize());
                 add(index,
-                        "\tWriteGenerator #(" + packedSize + ") gen_" + name + ";");
+                    "\tWriteGenerator #(" + packedSize + ") gen_" + name + ";");
+                add(index,
+                    "\tWriteGenerator #(" + packedSize + ") gen_" + name + "_mismatch;");
             }
 
             /* When unpacked size of port is larger then 0. */
@@ -189,7 +117,9 @@ public class WriteDriverCodegen extends Codegen {
                 String packedSize = decodeSizeDeclaration(outputs.get(name).getPackedSize());
                 String unpackedSize = decodeSizeDeclaration(outputs.get(name).getUnpackedSize());
                 add(index,
-                        "\tWriteGenerator #(" + packedSize + ") gen_" + name + " [" + unpackedSize + "];");
+                    "\tWriteGenerator #(" + packedSize + ") gen_" + name + " [" + unpackedSize + "];");
+                add(index,
+                    "\tWriteGenerator #(" + packedSize + ") gen_" + name + "_mismatch [" + unpackedSize + "];");
             }
 
             add(index, "\t// Port: " + outputs.get(name).toString());
