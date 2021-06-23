@@ -72,12 +72,13 @@ public class PortsDetector {
         descriptor.setUnpackedSize(getUnpackedSize(cleanDeclaration));
 
         for (String name: getPortsNames(cleanDeclaration, descriptor)) {
-            descriptor.setName(name);
+            PortDescriptor copy = descriptor.deepCopy();
+            copy.setName(name);
 
             if (isInput)
-                inputs.put(descriptor.getName(), descriptor);
+                inputs.put(name, copy);
             else
-                outputs.put(descriptor.getName(), descriptor);
+                outputs.put(name, copy);
         }
     }
 

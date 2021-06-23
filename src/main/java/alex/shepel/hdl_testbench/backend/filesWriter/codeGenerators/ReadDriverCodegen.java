@@ -99,7 +99,7 @@ public class ReadDriverCodegen extends Codegen {
             /* Adds ReadGenerator object declaration. */
             if (get(index).contains("ReadGenerator #(DATA_WIDTH) gen_port_name [PORTS_NUM];  // inputs")) {
                 remove(index);
-                addGeneratorsDeclaration(index, inputs);
+                addGeneratorsDeclaration(false, index, inputs);
             }
 
             /* Fills in ReadGenerator initialization field. */
@@ -133,11 +133,13 @@ public class ReadDriverCodegen extends Codegen {
      *              Value contain PortDescriptor object.
      */
     public void setExpectedOutputs(HashMap<String, PortDescriptor> outputs) {
+        outputs = addExpectedName(outputs);
+
         for (int index = 0; index < size(); index++) {
             /* Adds ReadGenerator object declaration. */
             if (get(index).contains("ReadGenerator #(DATA_WIDTH) gen_port_name [PORTS_NUM];  // expected outputs")) {
                 remove(index);
-                addGeneratorsDeclaration(index, outputs);
+                addGeneratorsDeclaration(true, index, outputs);
             }
 
             /* Fills in ReadGenerator initialization field. */
@@ -150,34 +152,46 @@ public class ReadDriverCodegen extends Codegen {
         }
     }
 
+    private HashMap<String, PortDescriptor> addExpectedName(HashMap<String, PortDescriptor> outputs) {
+        final HashMap<String, PortDescriptor> expectedOutputs = new HashMap<>();
+
+        for (final PortDescriptor desc: outputs.values()) {
+            final PortDescriptor expectedDesc = new PortDescriptor();
+            expectedDesc.setName(desc.getName() + "_expect");
+            expectedOutputs.put(expectedDesc.getName(), expectedDesc);
+        }
+
+        return expectedOutputs;
+    }
+
     /**
      * Adds a code lines for declaration of ReadGenerator objects.
      *
      * @param index The index of a line in the parsed file
      *              where must be placed current code.
-     * @param inputs The HashMap object that contains DUT's inputs.
+     * @param ports The HashMap object that contains DUT's ports.
      *              Key contain a port name.
      *              Value contain PortDescriptor object.
      */
-    private void addGeneratorsDeclaration(int index, HashMap<String, PortDescriptor> inputs) {
-        for (String name: inputs.keySet()) {
+    private void addGeneratorsDeclaration(boolean isExpected, int index, HashMap<String, PortDescriptor> ports) {
+        for (String name: ports.keySet()) {
             if (!name.toLowerCase().contains("clk") && !name.toLowerCase().contains("clock")) {
                 /* When unpacked size of port equals 0. */
-                if (inputs.get(name).getUnpackedSize().equals("")) {
-                    String packedSize = decodeSizeDeclaration(inputs.get(name).getPackedSize());
+                if (ports.get(name).getUnpackedSize().equals("")) {
+                    String packedSize = decodeSizeDeclaration(ports.get(name).getPackedSize());
                     add(index,
-                            "\tReadGenerator #(" + packedSize + ") gen_" + name + ";");
+                        "\tReadGenerator #(" + packedSize + ") gen_" + name + ";");
                 }
 
                 /* When unpacked size of port is larger then 0. */
                 else {
-                    String packedSize = decodeSizeDeclaration(inputs.get(name).getPackedSize());
-                    String unpackedSize = decodeSizeDeclaration(inputs.get(name).getUnpackedSize());
+                    String packedSize = decodeSizeDeclaration(ports.get(name).getPackedSize());
+                    String unpackedSize = decodeSizeDeclaration(ports.get(name).getUnpackedSize());
                     add(index,
-                            "\tReadGenerator #(" + packedSize + ") gen_" + name + " [" + unpackedSize + "];");
+                        "\tReadGenerator #(" + packedSize + ") gen_" + name + " [" + unpackedSize + "];");
                 }
 
-                add(index, "\t// Port: " + inputs.get(name).toString());
+                add(index, "\t// Port: " + ports.get(name).toString());
                 add(index, "");
             }
         }

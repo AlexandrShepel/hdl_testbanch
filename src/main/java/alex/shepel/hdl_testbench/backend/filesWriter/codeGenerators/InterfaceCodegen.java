@@ -56,12 +56,9 @@ public class InterfaceCodegen extends Codegen {
      */
     public void setDutInputs(HashMap<String, PortDescriptor> inputs) {
         for (int index = 0; index < size(); index++) {
-            if (get(index).equals("\tbit dut_inputs;")) {
-                remove(index);
-
-                for (PortDescriptor portDescriptor: inputs.values()) {
-                    add(index, "\t" + portDescriptor.toString() + ";");
-                }
+            if (get(index).contains("DUT inputs")) {
+                for (PortDescriptor portDescriptor: inputs.values())
+                    add(++index, "\t" + portDescriptor + ";");
 
                 break;
             }
@@ -77,16 +74,30 @@ public class InterfaceCodegen extends Codegen {
      */
     public void setDutOutputs(HashMap<String, PortDescriptor> outputs) {
         for (int index = 0; index < size(); index++) {
-            if (get(index).equals("\tbit dut_outputs;")) {
-                remove(index);
+            if (get(index).contains("DUT outputs"))
+                for (PortDescriptor desc : outputs.values())
+                    add(++index, "\t" + desc + ";");
 
-                for (PortDescriptor portDescriptor: outputs.values()) {
-                    add(index, "\t" + portDescriptor.toString() + ";");
+            else if (get(index).contains("TB internal signals"))
+                for (PortDescriptor desc : outputs.values()) {
+                    final String expectName = desc.getName() + "_expect";
+                    add(++index, "\t" + desc.toString().replace(desc.getName(), expectName) + ";");
+                    add(index, "\t" + toExtraPort(desc, "mismatch"));
+                    add(index, "\t" + toExtraPort(desc, "errors"));
                 }
-
-                break;
-            }
         }
+    }
+
+    private String toExtraPort(PortDescriptor desc, String suffix) {
+        StringBuilder result = new StringBuilder(
+                suffix.equals("errors") ? "int" : "bit");
+
+        result.append(" ").append(desc.getName()).append("_").append(suffix);
+
+        if (!desc.getUnpackedSize().equals(""))
+            result.append(" ").append(desc.getUnpackedSize());
+
+        return result.toString();
     }
 
     public void setSampleFreq(String freq) {

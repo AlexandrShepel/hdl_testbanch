@@ -77,13 +77,13 @@ public class WriteDriverCodegen extends Codegen {
     public void setOutputs(HashMap<String, PortDescriptor> outputs) {
         for (int index = 0; index < size(); index++) {
             /* Adds WriteGenerator object declaration. */
-            if (get(index).contains("WriteGenerator #(DATA_WIDTH) gen_port_name [PORTS_NUM]; // outputs")) {
+            if (get(index).contains("WriteGenerator #(DATA_WIDTH) gen_port_name [PORTS_NUM]")) {
                 remove(index);
                 addGeneratorsDeclaration(index, outputs);
             }
 
             /* Fills in WriteGenerator initialization field. */
-            else if (get(index).contains("local function void initGens();"))
+            else if (get(index).contains("local function void initGens()"))
                 definePackingAddPort(false, ++index, outputs, GENERATOR_INIT, GENERATOR_INIT_UNPACKED);
 
             /* Fills in WriteGenerator running field. */

@@ -25,10 +25,9 @@ interface Interface;
 	bit writing_clk;
 
 	// DUT inputs:
-	bit dut_inputs;
 
 	// DUT outputs:
-	bit dut_outputs;
 
+    // TB internal signals:
 
 endinterface

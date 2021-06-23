@@ -60,20 +60,32 @@ public class PortDescriptor {
      *         SystemVerilog/Verilog module's port declaration.
      */
     public String toString() {
-        String toString = "bit";
+        StringBuilder result = new StringBuilder("bit");
 
         if (!signed.equals(""))
-            toString = toString + " " + signed;
+            result.append(" ").append(signed);
 
         if (!packedSize.equals(""))
-            toString = toString + " " + packedSize;
+            result.append(" ").append(packedSize);
 
-        toString = toString + " " + name;
+        result.append(" ").append(name);
 
         if (!unpackedSize.equals(""))
-            toString = toString + " " + unpackedSize;
+            result.append(" ").append(unpackedSize);
 
-        return toString;
+        return result.toString();
+    }
+
+    public PortDescriptor deepCopy() {
+        PortDescriptor portDescriptor = new PortDescriptor();
+
+        portDescriptor.setName(name);
+        portDescriptor.setType(type);
+        portDescriptor.setSigned(signed);
+        portDescriptor.setPackedSize(packedSize);
+        portDescriptor.setUnpackedSize(unpackedSize);
+
+        return portDescriptor;
     }
 
 }
