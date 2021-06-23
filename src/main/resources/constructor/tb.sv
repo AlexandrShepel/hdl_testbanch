@@ -12,7 +12,7 @@
 `include "classes/Interface.sv"
 `include "classes/ReadDriver.sv"
 `include "classes/WriteDriver.sv"
-`include "classes/Monitor.sv"
+`include "classes/Checker.sv"
 
 `timescale 1ns/1ps
 
@@ -36,15 +36,20 @@ module tb ();
     ReadDriver #(
         .PARAMETER (iface.PARAMETER)
     ) readDriver;
+
     WriteDriver #(
         .PARAMETER (iface.PARAMETER)
     ) writeDriver;
-    Monitor #(
+
+    Checker #(
         .PARAMETER (iface.PARAMETER)
-    ) monitor;
+    ) outChecker;
 
     // Sets the time of initialization for the simulation clocks.
     localparam CLK_INIT_TIME = 0.5;
+
+    // Sets the period of checking mismatches between actual and expected data (ns).
+    localparam CHECK_PERIOD = 0.001;
 
     // Enables clocking.
     bit clk_enable = 0;
@@ -57,10 +62,10 @@ module tb ();
         .DUT_CLK_FREQ (iface.DUT_CLK_FREQ),
         .SAMPLE_FREQ (iface.SAMPLE_FREQ)
     ) clk_driver (
-        .enable             (clk_enable),
-        .dut_clk            (iface.clk),
-        .reading_clk        (iface.reading_clk),
-        .writing_clk        (iface.writing_clk)
+        .enable (clk_enable),
+        .dut_clk (iface.clk),
+        .reading_clk (iface.reading_clk),
+        .writing_clk (iface.writing_clk)
     );
 
 
@@ -82,10 +87,37 @@ module tb ();
     initial begin
         readDriver = new(iface, READ_FILES);   
         writeDriver = new(iface, WRITE_FILES);
-        monitor = new(iface);
+        outChecker = new(iface);
         
         #CLK_INIT_TIME
         clk_enable = 1;
+    end
+
+
+    /*
+        Checks mismatches between actual and expected data.
+    */
+    always begin
+        #CHECK_PERIOD outChecker.mismatch();
+    end
+
+
+    /*
+        Runs reading data from the file.
+        Checks the end of the test vector.
+        When the last test point is simulated:
+            -- displays the simulation log
+            -- stops simulation.
+    */
+    always @(posedge iface.reading_clk) begin
+        if (readDriver.isEnding()) begin
+            $display("\n*** THE SIMULATION END ***");
+            $display("Total points: %0d", readDriver.getSize());
+            outChecker.displayMismatches();
+            $display("");
+            $stop();
+        end else
+            readDriver.run();
     end
 
 
@@ -102,7 +134,7 @@ module tb ();
     */
     always @(posedge iface.writing_clk) begin
         writeDriver.run();
-        monitor.print(); 
+        outChecker.countError();
     end
 
 
