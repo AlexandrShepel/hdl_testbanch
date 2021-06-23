@@ -196,6 +196,7 @@ public class FilesWriter {
         tbCodegen.setOutputs(ports);
         ifaceCodegen.setDutOutputs(ports);
         checkerCodegen.setOutputs(ports);
+        readCodeGen.setExpectedOutputs(ports);
         writeCodeGen.setOutputs(ports);
     }
 

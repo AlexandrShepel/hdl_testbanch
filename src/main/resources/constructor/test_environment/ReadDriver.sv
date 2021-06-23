@@ -27,7 +27,8 @@ class ReadDriver #(
     virtual Interface iface;
 
     // The ReadGenerator objects that are driven by the ReadDriver class.
-    ReadGenerator #(DATA_WIDTH) gen_port_name [PORTS_NUM];
+    ReadGenerator #(DATA_WIDTH) gen_port_name [PORTS_NUM];  // inputs
+    ReadGenerator #(DATA_WIDTH) gen_port_name [PORTS_NUM];  // expected outputs
 
 
     /* 
@@ -45,7 +46,7 @@ class ReadDriver #(
     */
     local function void initGens();
 
-        isOneSize();
+        checkSize();
     endfunction
 
 
@@ -60,7 +61,6 @@ class ReadDriver #(
         Checks the end of the test vector.
     */
     function bit isEnding();
-        return gen_port_name.getIndex() >= gen_port_name.getSize() - 1;
     endfunction
 
 
@@ -68,7 +68,6 @@ class ReadDriver #(
         Returns the size of the test vector.
     */
     function int getSize();
-        return gen_port_name.getSize();
     endfunction
 
 

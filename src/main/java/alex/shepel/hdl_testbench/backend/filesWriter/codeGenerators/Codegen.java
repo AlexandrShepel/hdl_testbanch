@@ -1,6 +1,7 @@
 package alex.shepel.hdl_testbench.backend.filesWriter.codeGenerators;
 
 import alex.shepel.hdl_testbench.backend.parser.Parser;
+import alex.shepel.hdl_testbench.backend.parser.detectors.PortDescriptor;
 
 import java.io.*;
 import java.time.LocalDate;
@@ -149,7 +150,7 @@ public class Codegen extends ArrayList<String> {
      */
     public String decodeSizeReferencing(String codedSize) {
         if (codedSize.length() == 0)
-            return "";
+            return "0";
 
         /* When size is described by parameter's name. */
         for (String name: getParameters().keySet())
@@ -198,5 +199,30 @@ public class Codegen extends ArrayList<String> {
 
             return String.valueOf(elderBit + 1);
         }
+    }
+
+    protected void definePackingAddPort(final boolean isSinglePort, final int index,
+                                      final HashMap<String, PortDescriptor> ports,
+                                      final String[] packedMacro, final String[] unpackedMacro) {
+
+        for (final String name : ports.keySet()) {
+            if (!name.toLowerCase().contains("clk") && !name.toLowerCase().contains("clock")) {
+                final String unpackedSize = decodeSizeReferencing(ports.get(name).getUnpackedSize());
+                final boolean isUnpacked = !unpackedSize.equals("0");
+
+                addPortReplaceName(index, name, unpackedSize,
+                        (isUnpacked) ? unpackedMacro : packedMacro);
+
+                if (isSinglePort) break;
+
+                add(index, "\t\t// Port: " + ports.get(name).toString());
+                add(index, "");
+            }
+        }
+    }
+
+    protected void addPortReplaceName(final int index, final String name, final String size, final String[] macro) {
+        for (int i = macro.length - 1; i >= 0; i--)
+            add(index, macro[i].replace("port_name", name).replace("PARAMETER - 1", size));
     }
 }
