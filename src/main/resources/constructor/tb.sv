@@ -122,14 +122,6 @@ module tb ();
 
 
     /*
-        Runs reading data from the file.
-    */
-    always @(posedge iface.reading_clk) begin
-        readDriver.run();   
-    end
-
-
-    /*
         Runs data logging (console and file).
     */
     always @(posedge iface.writing_clk) begin
