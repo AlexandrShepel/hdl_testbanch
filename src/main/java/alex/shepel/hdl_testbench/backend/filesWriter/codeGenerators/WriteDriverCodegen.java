@@ -1,7 +1,7 @@
 package alex.shepel.hdl_testbench.backend.filesWriter.codeGenerators;
 
 import alex.shepel.hdl_testbench.backend.BackendParameters;
-import alex.shepel.hdl_testbench.backend.parser.detectors.PortDescriptor;
+import alex.shepel.hdl_testbench.backend.parsers.detectors.PortDescriptor;
 
 import java.io.IOException;
 import java.util.HashMap;

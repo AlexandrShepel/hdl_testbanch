@@ -2,10 +2,13 @@ package alex.shepel.hdl_testbench.frontend.mainPanel.pages;
 
 import alex.shepel.hdl_testbench.frontend.FrontendParameters;
 import alex.shepel.hdl_testbench.frontend.widgets.PresetButton;
-import alex.shepel.hdl_testbench.frontend.widgets.PresetCheckBox;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /*
  * File: Page4.java
@@ -37,11 +40,13 @@ public class Page5 extends JPanel implements FrontendParameters {
 
     /* The height of the top JTextArea object that
     represents main report information. */
-    private static final int MAIN_INFO_HEIGHT = 130;
+    private static final int COMMON_REPORT_HEIGHT = 130;
 
     /* The height of the bottom JTextArea object that
     displays passed or failed testing points. */
-    private static final int SPEC_POINTS_HEIGHT = 210;
+    private static final int DETAILED_REPORT_HEIGHT = 210;
+
+    private static final int DEFAULT_TABULATION = 16;
 
     /* The colors of testing points.
     It is green when passed and red otherwise. */
@@ -54,13 +59,13 @@ public class Page5 extends JPanel implements FrontendParameters {
      * TODO: It must be replaced with the information
      *       from test environment report.
      */
-    private static final String PAGE_TEXT_MAIN_INFO =
-            "----------------------- TESTBENCH REPORT -----------------------\n" +
+    private static final String COMMON_REPORT =
+            "------------------------ COMMON REPORT -------------------------\n" +
             "                                                                \n" +
-            "DUT name: name_of_dut.sv                                        \n" +
+            "DUT name: <dut_name>.sv                                         \n" +
             "Test name: test_1                                               \n" +
-            "Simulation points: 6000                                         \n" +
-            "Passed points: 5950                                               " ;
+            "Simulation frames: <total_frames>                               \n" +
+            "Total mismatches:  <total_mismatches>                             " ;
 
     /*
      * The information that is displayed on the bottom of application window.
@@ -68,25 +73,10 @@ public class Page5 extends JPanel implements FrontendParameters {
      * TODO: It must be replaced with the information
      *       from test environment report.
      */
-    private static final String PAGE_TEXT_SPEC_POINTS =
-            "----------------------- SPECIFIC POINTS -----------------------\n" +
-            "TIME          SIGNAL          VALUE          EXPECTED          \n" +
-            "505           ready           0              1                 \n" +
-            "1640          phase           4568           [ 4450  :  4460 ] \n" +
-            "3010          magnitude       328            [ 310   :  320  ] \n" +
-            "4090          phase           -101           [-110   : -120  ] \n" +
-            "5060          ready           0              1                 \n" +
-            "9040          phase           4568           [ 4450  :  4460 ] \n" +
-            "10080         magnitude       328            [ 310   :  320  ] \n" +
-            "12360         phase           -101           [-110   : -120  ] \n" +
-            "14580         ready           0              1                 \n" +
-            "17960         phase           4568           [ 4450  :  4460 ] \n" +
-            "20030         magnitude       328            [ 310   :  320  ] \n" +
-            "22500         phase           -101           [-110   : -120  ] \n" +
-            "25600         ready           0              1                 \n" +
-            "29500         phase           4568           [ 4450  :  4460 ] \n" +
-            "42000         magnitude       328            [ 310   :  320  ] \n" +
-            "56855         phase           -101           [-110   : -120  ]   " ;
+    private static final String DETAILED_REPORT_HEADER =
+            "----------------------- DETAILED REPORT -----------------------\n";
+
+    private static final String[] DETAILED_REPORT_COLS = {"PORT", "FRAMES", "FAILED", "PERCENT"};
 
     /**
      * The class constructor.
@@ -98,40 +88,35 @@ public class Page5 extends JPanel implements FrontendParameters {
                 FlowLayout.CENTER,
                 HORIZONTAL_COMPONENTS_ALIGNMENT,
                 VERTICAL_COMPONENTS_ALIGNMENT));
-        setWidgets();
     }
 
-    /**
-     * Sets and adds the widgets to the page.
-     */
-    private void setWidgets() {
-        setMainInfoArea();
-        setCheckBoxes();
+    public void showResults(Map<String, Integer> resultStats, String dutName) {
+        setCommonReport(resultStats, dutName);
         setButton();
-        setSpecPointsArea();
+        setDetailedReport(resultStats);
     }
 
     /**
      * Sets and adds the top JTextArea object to the application window.
      * It represents main report information.
+     * @param resultStats
+     * @param dutName
      */
-    private void setMainInfoArea() {
-        ReportTextArea textArea = new ReportTextArea(PAGE_TEXT_MAIN_INFO, MAIN_INFO_HEIGHT);
-        add(textArea);
-    }
+    private void setCommonReport(final Map<String, Integer> resultStats, final String dutName) {
+        String mainInfo = COMMON_REPORT;
+        mainInfo = mainInfo.replace("<dut_name>.sv", dutName);
+        mainInfo = mainInfo.replace("<total_frames>", "" + resultStats.get("total_frames"));
+        mainInfo = mainInfo.replace("<total_mismatches>", "" + resultStats.get("total_mismatches"));
 
-    private void setCheckBoxes() {
-        PresetCheckBox passBox = new PresetCheckBox("show passed", PASSED_COLOR);
-        PresetCheckBox failBox = new PresetCheckBox("show failed", FAILED_COLOR);
-        add(passBox);
-        add(failBox);
+        final ReportTextArea textArea = new ReportTextArea(mainInfo, COMMON_REPORT_HEIGHT);
+        add(textArea);
     }
 
     /**
      * Sets and adds the JButton object to the page.
      */
     private void setButton() {
-        PresetButton button = new PresetButton("Open TestBenchReport.txt");
+        PresetButton button = new PresetButton("Open log.txt");
         button.setPreferredSize(new Dimension((int) (BUTTON_WIDTH * 2.5), BUTTON_HEIGHT));
         button.addActionListener(e -> openReportFile());
         add(button);
@@ -140,12 +125,50 @@ public class Page5 extends JPanel implements FrontendParameters {
     /**
      * Sets and adds the bottom JTextArea object to the application window.
      * It displays passed or failed testing points.
+     * @param resultStats
      */
-    private void setSpecPointsArea() {
-        ReportTextArea textArea = new ReportTextArea(PAGE_TEXT_SPEC_POINTS);
+    private void setDetailedReport(Map<String, Integer> resultStats) {
+        Set<String> ignoreList = new HashSet<>(Arrays.asList("port_frames", "total_frames", "total_mismatches"));
+        StringBuilder detailedReport = getReportHeader();
 
+        for (String port: resultStats.keySet()) {
+            if (ignoreList.contains(port))
+                continue;
+
+            detailedReport.append(
+                    getPortReport(port, resultStats.get(port), resultStats.get("port_frames")));
+        }
+
+        setScrollPane(detailedReport.toString());
+    }
+
+    private StringBuilder getReportHeader() {
+        StringBuilder reportHeader = new StringBuilder(DETAILED_REPORT_HEADER);
+
+        for (String col: DETAILED_REPORT_COLS)
+            reportHeader.append(appendSpaces(col));
+
+        return reportHeader.append("\n");
+    }
+
+    private String getPortReport(String portName, int portMismatches, int portFrames) {
+        return  appendSpaces(portName) +
+                appendSpaces("" + portFrames) +
+                appendSpaces("" + portMismatches) +
+                appendSpaces("" + portMismatches * 100 / portFrames + " %\n");
+    }
+
+    private String appendSpaces(String str) {
+        StringBuilder strBuilder = new StringBuilder(str);
+        strBuilder.append(" ".repeat(Math.max(0, DEFAULT_TABULATION - strBuilder.length())));
+
+        return strBuilder.toString();
+    }
+
+    private void setScrollPane(String text) {
+        ReportTextArea textArea = new ReportTextArea(text);
         JScrollPane scrollPane = new JScrollPane(textArea);
-        scrollPane.setPreferredSize(new Dimension(textArea.getWidth(), SPEC_POINTS_HEIGHT));
+        scrollPane.setPreferredSize(new Dimension(textArea.getWidth(), DETAILED_REPORT_HEIGHT));
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setBorder(BorderFactory.createLineBorder(GREY, 1));
         add(scrollPane);
@@ -166,5 +189,4 @@ public class Page5 extends JPanel implements FrontendParameters {
     public String getName() {
         return PAGE_NAME;
     }
-
 }

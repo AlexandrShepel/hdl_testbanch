@@ -1,12 +1,14 @@
 package alex.shepel.hdl_testbench.backend;
 
 import alex.shepel.hdl_testbench.backend.filesWriter.FilesWriter;
-import alex.shepel.hdl_testbench.backend.parser.Parser;
+import alex.shepel.hdl_testbench.backend.parsers.ResultParser;
+import alex.shepel.hdl_testbench.backend.parsers.ModuleParser;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /*
  * File: Backend.java
@@ -23,7 +25,9 @@ import java.util.HashMap;
 public class Backend {
 
     /* Parses DUT.sv file. File must be specified by a user. */
-    private Parser dutParser;
+    private ModuleParser dutParser;
+
+    private ResultParser resultParser;
 
     /* Generates the .sv-classes, clk_hub.sv module
     and tb.sv module that is top level module of the testbench. */
@@ -38,12 +42,12 @@ public class Backend {
 
     /**
      * Sets the absolute path of the DUT file.
-     * Sends it to the Parser object.
+     * Sends it to the ModuleParser object.
      *
      * @param dutFile The File object.
      */
     public void setDutFile(File dutFile) throws IOException {
-        dutParser = new Parser(dutFile, Parser.EXTERNAL_RESOURCE);
+        dutParser = new ModuleParser(dutFile);
     }
 
     /**
@@ -55,11 +59,12 @@ public class Backend {
      */
     public void setWorkingFolder(File workingFolder) {
         filesWriter.setWorkingFolder(workingFolder);
+        resultParser = new ResultParser(workingFolder.getAbsolutePath() + "/output_data");
     }
 
     /**
      * Returns the list of clock inputs of the DUT.
-     * Gets that data from the Parser object.
+     * Gets that data from the ModuleParser object.
      *
      * @return The ArrayList object that contains list of DUT's clock inputs.
      */
@@ -116,4 +121,7 @@ public class Backend {
         filesWriter.generate();
     }
 
+    public Map<String, Integer> getResultStats() throws IOException {
+        return resultParser.getResultStats();
+    }
 }

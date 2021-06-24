@@ -2,7 +2,7 @@ package alex.shepel.hdl_testbench.backend.filesWriter;
 
 import alex.shepel.hdl_testbench.backend.BackendParameters;
 import alex.shepel.hdl_testbench.backend.filesWriter.codeGenerators.*;
-import alex.shepel.hdl_testbench.backend.parser.detectors.PortDescriptor;
+import alex.shepel.hdl_testbench.backend.parsers.detectors.PortDescriptor;
 
 import java.io.File;
 import java.io.FileWriter;

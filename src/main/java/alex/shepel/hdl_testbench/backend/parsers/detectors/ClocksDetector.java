@@ -1,4 +1,4 @@
-package alex.shepel.hdl_testbench.backend.parser.detectors;
+package alex.shepel.hdl_testbench.backend.parsers.detectors;
 
 import java.util.ArrayList;
 import java.util.Set;

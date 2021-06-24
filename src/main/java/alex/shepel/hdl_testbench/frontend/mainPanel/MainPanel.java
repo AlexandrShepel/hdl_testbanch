@@ -13,6 +13,7 @@ import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /*
  * File: MainPanel.java
@@ -46,12 +47,12 @@ public class MainPanel extends JLayeredPane implements FrontendParameters {
         setPreferredSize(new Dimension(APP_WIDTH, IP_HEIGHT));
         setOngoingPage(0);
 
-        add(p0, Integer.valueOf(0));
-        add(p1, Integer.valueOf(1));
-        add(p2, Integer.valueOf(2));
-        add(p3, Integer.valueOf(3));
-        add(p4, Integer.valueOf(4));
-        add(p5, Integer.valueOf(5));
+        add(p0, 0);
+        add(p1, 1);
+        add(p2, 2);
+        add(p3, 3);
+        add(p4, 4);
+        add(p5, 5);
     }
 
     /**
@@ -176,5 +177,9 @@ public class MainPanel extends JLayeredPane implements FrontendParameters {
      */
     public String getReportSamplingFrequency() {
         return p3.clockSpecPanel.getClock();
+    }
+
+    public void showResults(Map<String, Integer> resultStats) {
+        p5.showResults(resultStats, p0.getDutFile().getName());
     }
 }

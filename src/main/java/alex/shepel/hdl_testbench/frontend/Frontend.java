@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /*
  * File: Frontend.java
@@ -27,15 +28,15 @@ public class Frontend extends JFrame implements FrontendParameters {
 
     /* Top panel of the app's window.
     Allows user to configure properties of the resulting files. */
-    private static MainPanel confPanel;
+    private static final MainPanel mainPanel = new MainPanel();
 
     /* Central panel of the app's window.
     Monitors a progress of the configuration. */
-    private static ProgressPanel progPanel;
+    private static final ProgressPanel progPanel = new ProgressPanel();
 
     /* Bottom panel of the app's window.
     Contains navigation buttons. */
-    private static ButtonsPanel buttPanel;
+    private static final ButtonsPanel buttPanel = new ButtonsPanel();
 
     /**
      * The class constructor.
@@ -48,13 +49,8 @@ public class Frontend extends JFrame implements FrontendParameters {
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        /* Creates panels that will be added to the frame. */
-        confPanel = new MainPanel();
-        progPanel = new ProgressPanel();
-        buttPanel = new ButtonsPanel();
-
         /* Adds panels to the frame. */
-        add(confPanel);
+        add(mainPanel);
         add(progPanel);
         add(buttPanel);
 
@@ -74,7 +70,7 @@ public class Frontend extends JFrame implements FrontendParameters {
      */
     public void back() {
         progPanel.previousStep();
-        confPanel.setOngoingPage(progPanel.getStep());
+        mainPanel.setOngoingPage(progPanel.getStep());
         buttPanel.setOngoingButtonStatus(progPanel.getStep());
     }
 
@@ -84,7 +80,7 @@ public class Frontend extends JFrame implements FrontendParameters {
      */
     public void next() {
         progPanel.nextStep();
-        confPanel.setOngoingPage(progPanel.getStep());
+        mainPanel.setOngoingPage(progPanel.getStep());
         buttPanel.setOngoingButtonStatus(progPanel.getStep());
     }
 
@@ -123,7 +119,7 @@ public class Frontend extends JFrame implements FrontendParameters {
      *         of the ongoing page.
      */
     public String getPageName() {
-        return confPanel.getPageName();
+        return mainPanel.getPageName();
     }
 
     /**
@@ -144,11 +140,10 @@ public class Frontend extends JFrame implements FrontendParameters {
      * @return The File object of the DUT.sv file.
      */
     public File getDutFile() throws NullPointerException {
-        if (confPanel.getDutFile() == null) {
+        if (mainPanel.getDutFile() == null)
             throw new NullPointerException("Specified DUT file does not exist.");
-        }
 
-        return confPanel.getDutFile();
+        return mainPanel.getDutFile();
     }
 
     /**
@@ -160,11 +155,11 @@ public class Frontend extends JFrame implements FrontendParameters {
      *         There must be placed test environment.
      */
     public File getWorkingFolder() throws IOException {
-        if (!confPanel.getWorkingFolder().exists()) {
+        if (!mainPanel.getWorkingFolder().exists()) {
             throw new IOException("Specify correct working folder.");
         }
 
-        return confPanel.getWorkingFolder();
+        return mainPanel.getWorkingFolder();
     }
 
     /**
@@ -175,7 +170,7 @@ public class Frontend extends JFrame implements FrontendParameters {
      *                  that contains list of DUT's clock inputs.
      */
     public void setDutClocks(ArrayList<String> dutClocks) {
-        confPanel.setDutClocks(dutClocks);
+        mainPanel.setDutClocks(dutClocks);
     }
 
     /**
@@ -189,7 +184,7 @@ public class Frontend extends JFrame implements FrontendParameters {
      *         between DUT's and clk_hub's modules.
      */
     public HashMap<String, String> getClocksHashMap() {
-        return confPanel.getClocksHashMap();
+        return mainPanel.getClocksHashMap();
     }
 
     /**
@@ -204,7 +199,7 @@ public class Frontend extends JFrame implements FrontendParameters {
      *         output data to the report file.
      */
     public String getReportSamplingFrequency() {
-        return confPanel.getReportSamplingFrequency();
+        return mainPanel.getReportSamplingFrequency();
     }
 
     /**
@@ -216,5 +211,9 @@ public class Frontend extends JFrame implements FrontendParameters {
      */
     public void showExceptionMessage(Exception exception) {
         Helper.showExceptionMessage(exception);
+    }
+
+    public void showResults(Map<String, Integer> resultStats) {
+        mainPanel.showResults(resultStats);
     }
 }

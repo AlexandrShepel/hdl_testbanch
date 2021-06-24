@@ -83,40 +83,34 @@ public class Application implements ActionListener {
      * -- Runs backend actions that correspond to that page.
      * -- Catches exceptions and shows warning messages.
      *
-     * @return If backend action is successful, returns true.
-     *         Else return false.
+     * @return "true" when backend action is successfully completed.
      */
     private boolean doBackendAction() {
         try {
             switch (frontend.getPageName()) {
-                case "Specify DUT file" -> backend.setDutFile(frontend.getDutFile());
-
+                case "Specify DUT file" ->
+                    backend.setDutFile(frontend.getDutFile());
                 case "Specify working folder" -> {
                     backend.setWorkingFolder(frontend.getWorkingFolder());
                     frontend.setDutClocks(backend.getDutClocks());
                     frontend.refresh();
                 }
-
-                case "Specify clocks" -> backend.setClocksHashMap(frontend.getClocksHashMap());
-
+                case "Specify clocks" ->
+                    backend.setClocksHashMap(frontend.getClocksHashMap());
                 case "Specify sampling frequency" -> {
                     backend.setReportSamplingFrequency(frontend.getReportSamplingFrequency());
                     backend.generateEnvironment();
                 }
-
-                case "Run ModelSim" -> {
-                    // TODO: implement following methods.
-                    // backend.runScoreboard();
-                    // frontend.putResults();
+                case "Run ModelSim" ->
+                    frontend.showResults(backend.getResultStats());
+                default -> {
+                    return false;
                 }
-
-                default -> { return false; }
             }
-
             return true;
         }
 
-        catch (NullPointerException | IOException e) {
+        catch (Exception e) {
             frontend.showExceptionMessage(e);
             e.printStackTrace();
             return false;
