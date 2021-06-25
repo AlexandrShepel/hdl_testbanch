@@ -1,7 +1,6 @@
-package alex.shepel.hdl_testbench.frontend.mainPanel.pages;
+package alex.shepel.hdl_testbench.frontend.panels.pages;
 
 import alex.shepel.hdl_testbench.frontend.FrontendParameters;
-import alex.shepel.hdl_testbench.frontend.widgets.PresetButton;
 import alex.shepel.hdl_testbench.frontend.widgets.PresetTextArea;
 
 import javax.swing.*;
@@ -68,7 +67,6 @@ public class Page4 extends JPanel implements FrontendParameters {
      */
     private void setWidgets() {
         setTextArea();
-        setButton();
     }
 
     /**
@@ -77,23 +75,6 @@ public class Page4 extends JPanel implements FrontendParameters {
     private void setTextArea() {
         PresetTextArea textArea = new PresetTextArea(PAGE_TEXT);
         add(textArea);
-    }
-
-    /**
-     * Sets and adds the JButton object to the page.
-     */
-    private void setButton() {
-        PresetButton button = new PresetButton("Open TestBenchReport.txt");
-        button.setPreferredSize(new Dimension(BUTTON_WIDTH * 3, BUTTON_HEIGHT));
-        button.addActionListener(e -> openReportFile());
-        add(button);
-    }
-
-    /**
-     * Opens "TestBenchReport.txt" file.
-     */
-    private void openReportFile() {
-        // TODO: Make implementation of opening TestBenchReport.txt file.
     }
 
     /**

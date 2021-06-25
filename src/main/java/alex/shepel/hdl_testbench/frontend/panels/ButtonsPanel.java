@@ -1,4 +1,4 @@
-package alex.shepel.hdl_testbench.frontend.buttonsPanel;
+package alex.shepel.hdl_testbench.frontend.panels;
 
 import alex.shepel.hdl_testbench.frontend.FrontendParameters;
 import alex.shepel.hdl_testbench.frontend.widgets.PresetButton;

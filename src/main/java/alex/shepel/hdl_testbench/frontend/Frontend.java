@@ -1,9 +1,9 @@
 package alex.shepel.hdl_testbench.frontend;
 
-import alex.shepel.hdl_testbench.frontend.buttonsPanel.ButtonsPanel;
-import alex.shepel.hdl_testbench.frontend.mainPanel.MainPanel;
+import alex.shepel.hdl_testbench.frontend.panels.ButtonsPanel;
+import alex.shepel.hdl_testbench.frontend.panels.MainPanel;
 import alex.shepel.hdl_testbench.frontend.helper.Helper;
-import alex.shepel.hdl_testbench.frontend.progressPanel.ProgressPanel;
+import alex.shepel.hdl_testbench.frontend.panels.ProgressPanel;
 import alex.shepel.hdl_testbench.frontend.widgets.PresetButton;
 
 import javax.swing.*;
@@ -116,7 +116,7 @@ public class Frontend extends JFrame implements FrontendParameters {
      * that is showing on the app's window at the moment.
      *
      * @return The String object that contains name
-     *         of the ongoing page.
+     * of the ongoing page.
      */
     public String getPageName() {
         return mainPanel.getPageName();
@@ -127,24 +127,11 @@ public class Frontend extends JFrame implements FrontendParameters {
      * on the bottom panel of the app's window.
      *
      * @return The HashMap object.
-     *         Value contains a MyButton object.
-     *         Key contains a name of this button.
+     * Value contains a MyButton object.
+     * Key contains a name of this button.
      */
-    public static Map<String, PresetButton> getButtPanelMap() {
+    public static Map<String, PresetButton> getButtonsMap() {
         return ButtonsPanel.getButtonsHashMap();
-    }
-
-
-    /**
-     * Returns a HashMap that contains all buttons represented
-     * on the bottom panel of the app's window.
-     *
-     * @return The HashMap object.
-     *         Value contains a MyButton object.
-     *         Key contains a name of this button.
-     */
-    public Map<String, PresetButton> getResultPageButtMap() {
-        return mainPanel.getButtons();
     }
 
     /**
@@ -165,7 +152,7 @@ public class Frontend extends JFrame implements FrontendParameters {
      * test environment.
      *
      * @return The File object of the working folder.
-     *         There must be placed test environment.
+     * There must be placed test environment.
      */
     public File getWorkingFolder() throws IOException {
         if (!mainPanel.getWorkingFolder().exists()) {
@@ -194,7 +181,7 @@ public class Frontend extends JFrame implements FrontendParameters {
      * This is specified by user.
      *
      * @return The HashMap object that contains correspondence
-     *         between DUT's and clk_hub's modules.
+     * between DUT's and clk_hub's modules.
      */
     public HashMap<String, String> getClocksHashMap() {
         return mainPanel.getClocksHashMap();
@@ -208,8 +195,8 @@ public class Frontend extends JFrame implements FrontendParameters {
      * It is specified by a user.
      *
      * @return Sampling frequency that is used
-     *         in the test environment for writing
-     *         output data to the report file.
+     * in the test environment for writing
+     * output data to the report file.
      */
     public String getReportSamplingFrequency() {
         return mainPanel.getReportSamplingFrequency();
@@ -224,9 +211,5 @@ public class Frontend extends JFrame implements FrontendParameters {
      */
     public void showExceptionMessage(Exception exception) {
         Helper.showExceptionMessage(exception);
-    }
-
-    public void showResults(Map<String, Integer> resultStats) {
-        mainPanel.showResults(resultStats);
     }
 }

@@ -1,4 +1,4 @@
-package alex.shepel.hdl_testbench.frontend.mainPanel.pages;
+package alex.shepel.hdl_testbench.frontend.panels.pages;
 
 import alex.shepel.hdl_testbench.frontend.FrontendParameters;
 import alex.shepel.hdl_testbench.frontend.widgets.PresetButton;
@@ -10,27 +10,25 @@ import java.awt.*;
 import java.io.File;
 
 /*
- * File: Page1.java
+ * File: Page0.java
  * ----------------------------------------------
  * The panel that represents an interactive page.
- * It allows user to configure project directory
- * where test environment and test results will
- * be placed. Implementation is based on using
- * the Windows Explorer application.
+ * It allows user to configure directory of DUT file
+ * through the Windows Explorer application.
  */
-public class Page1 extends JPanel implements FrontendParameters {
+public class Page0 extends JPanel implements FrontendParameters {
 
     /* The name of the page.
     It is used for gain access to this page
     from the ActionEvent interface. */
-    private static final String PAGE_NAME = "Specify working folder";
+    private static final String PAGE_NAME = "Specify DUT file";
 
     /* The spacing between the top border of application window
     and first row of the displayed text. */
-    private static final int TOP_ALIGNMENT = 99;
+    private static final int TOP_ALIGNMENT = 120;
 
     /* The vertical spacing between displayed components. */
-    private static  final int VERTICAL_COMPONENTS_ALIGNMENT = 25;
+    private static final int VERTICAL_COMPONENTS_ALIGNMENT = 25;
 
     /* The horizontal spacing between displayed components. */
     private static final int HORIZONTAL_COMPONENTS_ALIGNMENT = 20;
@@ -40,26 +38,23 @@ public class Page1 extends JPanel implements FrontendParameters {
     private static final int TEXT_FIELD_CHARS = 35;
 
     /* JTextField object that implements action listener interface. */
-    private final JTextField textField = new JTextField();
-
-    private static final String DEFAULT_TEXT_FIELD_TEXT = ".\\assets\\dutTests\\test0001";
-
-    /* he working directory that must be opened.
-    It is specified by user. */
-    private File workingFolder;
+    private static final JTextField textField = new JTextField();
 
     /* Default text that is placed in the text field. */
-    private static final String DEFAULT_FOLDER_NAME = "\\testEnvironment";
+    private static final String DEFAULT_TEXT_FIELD_TEXT = "c:\\fpga\\psp\\pdis\\main.sv";
+
+    /* The file that must be opened.
+    It is specified by user. */
+    private File dutFile;
 
     /* The dialog text that is displayed on the application window. */
     private static final String PAGE_TEXT =
-            "Specify the working folder. \n" +
-            "Here will be created test environment for your DUT.";
+            "Specify the DUT.sv file:";
 
     /**
      * The class constructor.
      */
-    public Page1() {
+    public Page0() {
         setBounds(0, TOP_ALIGNMENT, APP_WIDTH, IP_HEIGHT - TOP_ALIGNMENT);
         setBackground(BACKGROUND_COLOR);
         setLayout(new FlowLayout(
@@ -104,54 +99,40 @@ public class Page1 extends JPanel implements FrontendParameters {
      */
     private void setButton() {
         PresetButton button = new PresetButton("Browse");
-        button.addActionListener(e -> selectFolder());
+        button.addActionListener(e -> openFile());
         add(button);
     }
 
     /**
-     * Selects folder that is specified by user
-     * for further work of application.
+     * Opens file that is selected by user.
      */
-    private void selectFolder() {
+    private void openFile() {
+        /* sets JFileChooser object properties */
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setCurrentDirectory(new File("."));
-        FileNameExtensionFilter foldersFilter = new FileNameExtensionFilter(
-                "Folders",
-                "dir"
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                "Verilog & SystemVerilog",
+                "v", "sv"
         );
-        fileChooser.addChoosableFileFilter(foldersFilter);
-        fileChooser.setApproveButtonText("Select");
-        fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        fileChooser.setFileFilter(filter);
+        fileChooser.setCurrentDirectory(new File("."));
         int response = fileChooser.showOpenDialog(null);
 
+        /* when file is specified successfully */
         if (response == JFileChooser.APPROVE_OPTION) {
-            createTestEnvironmentFolder(fileChooser);
-            textField.setText(String.valueOf(workingFolder));
+            dutFile = new File(fileChooser.getSelectedFile().getAbsolutePath());
+            textField.setText(String.valueOf(dutFile));
         }
     }
 
     /**
-     * Creates a directory
-     * where will be placed generated files.
+     * Returns a DUT file.
      *
-     * @param fileChooser The JFileChooser object
-     *                    that contains path
-     *                    where must be created
-     *                    a new directory.
+     * @return The File object
+     *         that contains path
+     *         of the specified DUT file.
      */
-    private void createTestEnvironmentFolder(JFileChooser fileChooser) {
-        workingFolder = new File(fileChooser.getSelectedFile().getAbsolutePath() + DEFAULT_FOLDER_NAME);
-        workingFolder.mkdir();
-    }
-
-    /**
-     * Returns the File object that represents a working folder
-     * that will be used for further work of application.
-     *
-     * @return The File object that represents a working folder.
-     */
-    public File getWorkingFolder() {
-        return workingFolder;
+    public File getDutFile() {
+        return dutFile;
     }
 
     /**

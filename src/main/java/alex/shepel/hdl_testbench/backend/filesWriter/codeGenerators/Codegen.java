@@ -1,6 +1,6 @@
 package alex.shepel.hdl_testbench.backend.filesWriter.codeGenerators;
 
-import alex.shepel.hdl_testbench.backend.parsers.ModuleParser;
+import alex.shepel.hdl_testbench.backend.parsers.Parser;
 import alex.shepel.hdl_testbench.backend.parsers.detectors.PortDescriptor;
 
 import java.io.*;
@@ -12,7 +12,7 @@ import java.util.HashMap;
 /*
  * File: CodeGenerator.java
  * -----------------------------------------------
- * Parses specified file. Uses ModuleParser object.
+ * Parses specified file. Uses Parser object.
  * Saves it as list of code lines.
  * Overwrites existing code lines if needed.
  */
@@ -32,8 +32,8 @@ public class Codegen extends ArrayList<String> {
     public void parseFile(String filePath) throws IOException {
         ArrayList<String> pathElements = new ArrayList<>(Arrays.asList(filePath.split("/")));
         fileName = pathElements.get(pathElements.size() - 1);
-        ModuleParser moduleParser = new ModuleParser(filePath);
-        addAll(moduleParser.fileToArrayList());
+        Parser parser = new Parser(filePath);
+        addAll(parser.fileToArrayList());
     }
 
     /**

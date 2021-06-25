@@ -20,7 +20,7 @@ public interface FrontendParameters {
     Font PAGE_FONT = new Font("Dialog", Font.BOLD, 16);
 
     /* The number of configuration steps. */
-    int NUM_OF_STEPS = 6;
+    int NUM_OF_STEPS = 5;
 
     /* The size of the ovals that represent the configuration steps. */
     int PROGRESS_OVAL_SIZE = 12;

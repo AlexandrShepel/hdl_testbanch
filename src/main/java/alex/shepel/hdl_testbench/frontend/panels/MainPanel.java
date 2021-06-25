@@ -1,20 +1,17 @@
-package alex.shepel.hdl_testbench.frontend.mainPanel;
+package alex.shepel.hdl_testbench.frontend.panels;
 
 import alex.shepel.hdl_testbench.frontend.FrontendParameters;
-import alex.shepel.hdl_testbench.frontend.mainPanel.pages.Page0;
-import alex.shepel.hdl_testbench.frontend.mainPanel.pages.Page2;
-import alex.shepel.hdl_testbench.frontend.mainPanel.pages.Page1;
-import alex.shepel.hdl_testbench.frontend.mainPanel.pages.Page3;
-import alex.shepel.hdl_testbench.frontend.mainPanel.pages.Page4;
-import alex.shepel.hdl_testbench.frontend.mainPanel.pages.Page5;
-import alex.shepel.hdl_testbench.frontend.widgets.PresetButton;
+import alex.shepel.hdl_testbench.frontend.panels.pages.Page0;
+import alex.shepel.hdl_testbench.frontend.panels.pages.Page2;
+import alex.shepel.hdl_testbench.frontend.panels.pages.Page1;
+import alex.shepel.hdl_testbench.frontend.panels.pages.Page3;
+import alex.shepel.hdl_testbench.frontend.panels.pages.Page4;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 /*
  * File: MainPanel.java
@@ -39,7 +36,6 @@ public class MainPanel extends JLayeredPane implements FrontendParameters {
     private final Page2 p2 = new Page2();
     private final Page3 p3 = new Page3();
     private final Page4 p4 = new Page4();
-    private final Page5 p5 = new Page5();
 
     /**
      * The class constructor.
@@ -53,7 +49,6 @@ public class MainPanel extends JLayeredPane implements FrontendParameters {
         add(p2, 2);
         add(p3, 3);
         add(p4, 4);
-        add(p5, 5);
     }
 
     /**
@@ -78,7 +73,6 @@ public class MainPanel extends JLayeredPane implements FrontendParameters {
         p2.setVisible(pageNum == 2);
         p3.setVisible(pageNum == 3);
         p4.setVisible(pageNum == 4);
-        p5.setVisible(pageNum == 5);
     }
 
     /**
@@ -114,7 +108,6 @@ public class MainPanel extends JLayeredPane implements FrontendParameters {
         if (p2.isVisible()) return p2.getName();
         if (p3.isVisible()) return p3.getName();
         if (p4.isVisible()) return p4.getName();
-        if (p5.isVisible()) return p5.getName();
         return null;
     }
 
@@ -180,11 +173,4 @@ public class MainPanel extends JLayeredPane implements FrontendParameters {
         return p3.clockSpecPanel.getClock();
     }
 
-    public void showResults(Map<String, Integer> resultStats) {
-        p5.showResults(resultStats, p0.getDutFile().getName());
-    }
-
-    public HashMap<String, PresetButton> getButtons() {
-        return p5.getButtons();
-    }
 }

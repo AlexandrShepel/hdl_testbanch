@@ -36,7 +36,7 @@ public class Application implements ActionListener {
 
         /* Adds action listeners
         to the control buttons of the app's window. */
-        for (PresetButton butt: Frontend.getButtPanelMap().values())
+        for (PresetButton butt: Frontend.getButtonsMap().values())
             butt.addActionListener(this);
 
         /* Initializes Backend object. */
@@ -74,8 +74,6 @@ public class Application implements ActionListener {
                     frontend.help();
             case "Finish" ->
                     frontend.finish();
-            case "Refresh" ->
-                    doBackendAction();
         }
     }
 
@@ -102,15 +100,6 @@ public class Application implements ActionListener {
                 case "Specify sampling frequency" -> {
                     backend.setReportSamplingFrequency(frontend.getReportSamplingFrequency());
                     backend.generateEnvironment();
-                }
-                case "Run ModelSim" -> {
-                    frontend.showResults(backend.getResultStats());
-
-                    for (PresetButton butt: frontend.getResultPageButtMap().values())
-                        butt.addActionListener(this);
-                }
-                case "Results displaying" -> {
-                    frontend.showResults(backend.getResultStats());
                 }
                 default -> {
                     return false;

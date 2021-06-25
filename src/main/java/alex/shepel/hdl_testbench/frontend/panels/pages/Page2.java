@@ -1,4 +1,4 @@
-package alex.shepel.hdl_testbench.frontend.mainPanel.pages;
+package alex.shepel.hdl_testbench.frontend.panels.pages;
 
 import alex.shepel.hdl_testbench.frontend.FrontendParameters;
 import alex.shepel.hdl_testbench.frontend.widgets.PresetTextArea;
