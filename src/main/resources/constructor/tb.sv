@@ -27,10 +27,13 @@ module tb ();
     Interface iface();
 
     // Path to the folder with files that will be read.
-	const string READ_FILES = "./readFolder/";
+    const string PROJECT_PATH = "<project_path>";
+
+    // Path to the folder with files that will be read.
+	const string READ_FILES = {PROJECT_PATH, "/<input_data_folder>"};
 
     // Path to the folder with files that will be written.
-	const string WRITE_FILES = "./writeFolder/";
+	const string WRITE_FILES = {PROJECT_PATH, "/<output_data_folder>"};
 
     // The objects of the test environment.
     ReadDriver #(
@@ -111,14 +114,37 @@ module tb ();
     */
     always @(posedge iface.reading_clk) begin
         if (readDriver.isEnding()) begin
-            $display("\n*** THE SIMULATION END ***");
-            $display("Total points: %0d", readDriver.getSize());
-            outChecker.displayMismatches();
-            $display("");
-            $stop();
+            createLogs();
+            stopSimulation();
         end else
             readDriver.run();
     end
+
+
+    /*
+        Creates logs.
+    */
+    task createLogs();
+        $display("\n********* THE SIMULATION END **********");
+
+        if (iface.test_passed)
+            $display("*********** TEST CASE PASS ************\n");
+        else
+            $display("*********** TEST CASE FAIL ************\n");
+
+        writeDriver.createLog(PROJECT_PATH, readDriver.getSize());
+    endtask
+
+
+    /*
+        Stops simulation.
+    */
+    task stopSimulation();
+        writeDriver.close();
+        readDriver.close();
+
+        $stop();
+    endtask
 
 
     /*

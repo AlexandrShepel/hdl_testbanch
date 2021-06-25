@@ -27,8 +27,8 @@ class ReadDriver #(
     virtual Interface iface;
 
     // The ReadGenerator objects that are driven by the ReadDriver class.
-    ReadGenerator #(DATA_WIDTH) gen_port_name [PORTS_NUM];  // inputs
-    ReadGenerator #(DATA_WIDTH) gen_port_name [PORTS_NUM];  // expected outputs
+    ReadGenerator #(DATA_WIDTH) gen_<port_name> [PORTS_NUM];  // inputs
+    ReadGenerator #(DATA_WIDTH) gen_<port_name> [PORTS_NUM];  // expected outputs
 
 
     /* 

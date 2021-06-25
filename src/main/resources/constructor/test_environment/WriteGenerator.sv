@@ -28,10 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-class WriteGenerator #(
-    // The width of the values, that are processed by DUT.
-    parameter DATA_WIDTH = 16
-);
+class WriteGenerator;
 
 
     /*
@@ -52,16 +49,24 @@ class WriteGenerator #(
         Creates the specified file for writing.
         Overwrites if it exists.
     */
-    function void open(string filePath);
-        fd = $fopen(filePath, "w");
+    function void open(string filePath, string mode);
+        fd = $fopen(filePath, mode);
     endfunction
 
 
     /*
         Writes the data, that is processed by DUT, to a file.
     */
-    function void write(logic [DATA_WIDTH - 1 : 0] dutResult);
-        $fdisplay(fd, "%0d", dutResult);
+    function void write(string line);
+        $fdisplay(fd, "%0s", line);
+    endfunction
+
+
+    /*
+        Closes output stream.
+    */
+    function void close();
+        $fclose(fd);
     endfunction
 
 

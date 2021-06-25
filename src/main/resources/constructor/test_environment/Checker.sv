@@ -26,7 +26,7 @@ class Checker #(
     */
     function new(virtual Interface iface);
         this.iface = iface;
-        iface.port_name_errors = 0;
+        iface.<port_name>_errors = 0;
     endfunction
 
 
@@ -41,14 +41,6 @@ class Checker #(
         Counts mismatches between actual and expected data.
     */
     function void countError();
-    endfunction
-
-
-    /*
-        Displays the total count of mismatches for each port.
-    */
-    function void displayMismatches();
-        $display("Total mismatches:");
     endfunction
 
 

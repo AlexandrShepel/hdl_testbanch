@@ -18,59 +18,59 @@ public class ReadDriverCodegen extends Codegen {
     /* The template of code for initialization of ReadGenerator object.
     Used when unpacked size of input port equals to 0. */
     private static final String[] GENERATOR_INIT = {
-            "\t\tthis.gen_port_name = new();",
-            "\t\tthis.gen_port_name.open({$sformatf(\"%s\", filePath), \"/port_name.txt\"});",
+            "\t\tthis.gen_<port_name> = new();",
+            "\t\tthis.gen_<port_name>.open({$sformatf(\"%s\", filePath), \"/<port_name>.txt\"});",
     };
 
     /* The template of code for initialization of ReadGenerator object.
     Used when unpacked size of input port larger then 0. */
     private static final String[] GENERATOR_INIT_UNPACKED = {
             "\t\tfor (int i = 0; i <= PARAMETER - 1; i++) begin",
-            "\t\t    this.gen_port_name[i] = new();",
-            "\t\t    this.gen_port_name[i].open({$sformatf(\"%s\", filePath), \"/port_name_\", $sformatf(\"%0d\", i), \".txt\"});",
+            "\t\t    this.gen_<port_name>[i] = new();",
+            "\t\t    this.gen_<port_name>[i].open({$sformatf(\"%s\", filePath), \"/<port_name>_\", $sformatf(\"%0d\", i), \".txt\"});",
             "\t\tend"
     };
 
     /* The template of code for running of ReadGenerator object.
     Used when unpacked size of input port equals to 0. */
     private static final String[] GENERATOR_RUN = {
-            "\t\tiface.port_name = gen_port_name.getPoint();",
-            "\t\tgen_port_name.setIndex(gen_port_name.getIndex() + 1);"
+            "\t\tiface.<port_name> = gen_<port_name>.getPoint();",
+            "\t\tgen_<port_name>.setIndex(gen_<port_name>.getIndex() + 1);"
     };
 
     /* The template of code for running of ReadGenerator object.
     Used when unpacked size of input port larger then 0. */
     private static final String[] GENERATOR_RUN_UNPACKED = {
             "\t\tfor (int i = 0; i <= PARAMETER - 1; i++) begin",
-            "\t\t    iface.port_name[i] = gen_port_name[i].getPoint();",
-            "\t\t    gen_port_name[i].setIndex(gen_port_name[i].getIndex() + 1);",
+            "\t\t    iface.<port_name>[i] = gen_<port_name>[i].getPoint();",
+            "\t\t    gen_<port_name>[i].setIndex(gen_<port_name>[i].getIndex() + 1);",
             "\t\tend"
     };
 
     private static final String[] CHECK_SIZE = {
-            "\t\tisTrue = isTrue && (this.gen_prev_port_name.getSize() == this.gen_next_port_name.getSize());",
+            "\t\tisTrue = isTrue && (this.gen_prev_<port_name>.getSize() == this.gen_next_<port_name>.getSize());",
     };
 
     private static final String[] CHECK_SIZE_UNPACKED = {
             "\t\tfor (int i = 0; i < PARAMETER - 1; i++) begin",
-            "\t\t    isTrue = isTrue && (this.gen_port_name[i].getSize() == this.gen_port_name[i + 1].getSize());",
+            "\t\t    isTrue = isTrue && (this.gen_<port_name>[i].getSize() == this.gen_<port_name>[i + 1].getSize());",
             "\t\tend"
     };
 
     private static final String[] CHECK_ENDING = {
-            "\t\treturn gen_port_name.getIndex() >= gen_port_name.getSize() - 1;",
+            "\t\treturn gen_<port_name>.getIndex() >= gen_<port_name>.getSize() - 1;",
     };
 
     private static final String[] CHECK_ENDING_UNPACKED = {
-            "\t\treturn gen_port_name[0].getIndex() >= gen_port_name[0].getSize() - 1;",
+            "\t\treturn gen_<port_name>[0].getIndex() >= gen_<port_name>[0].getSize() - 1;",
     };
 
     private static final String[] GET_SIZE = {
-            "\t\treturn gen_port_name.getSize();",
+            "\t\treturn gen_<port_name>.getSize();",
     };
 
     private static final String[] GET_SIZE_UNPACKED = {
-            "\t\treturn gen_port_name[0].getSize();",
+            "\t\treturn gen_<port_name>[0].getSize();",
     };
 
     /**
@@ -97,9 +97,9 @@ public class ReadDriverCodegen extends Codegen {
     public void setInputs(HashMap<String, PortDescriptor> inputs) {
         for (int index = 0; index < size(); index++) {
             /* Adds ReadGenerator object declaration. */
-            if (get(index).contains("ReadGenerator #(DATA_WIDTH) gen_port_name [PORTS_NUM];  // inputs")) {
+            if (get(index).contains("ReadGenerator #(DATA_WIDTH)") && get(index).contains("// inputs")) {
                 remove(index);
-                addGeneratorsDeclaration(false, index, inputs);
+                addGeneratorsDeclaration(index, inputs);
             }
 
             /* Fills in ReadGenerator initialization field. */
@@ -137,9 +137,9 @@ public class ReadDriverCodegen extends Codegen {
 
         for (int index = 0; index < size(); index++) {
             /* Adds ReadGenerator object declaration. */
-            if (get(index).contains("ReadGenerator #(DATA_WIDTH) gen_port_name [PORTS_NUM];  // expected outputs")) {
+            if (get(index).contains("ReadGenerator #(DATA_WIDTH)") && get(index).contains("// expected outputs")) {
                 remove(index);
-                addGeneratorsDeclaration(true, index, outputs);
+                addGeneratorsDeclaration(index, outputs);
             }
 
             /* Fills in ReadGenerator initialization field. */
@@ -173,7 +173,7 @@ public class ReadDriverCodegen extends Codegen {
      *              Key contain a port name.
      *              Value contain PortDescriptor object.
      */
-    private void addGeneratorsDeclaration(boolean isExpected, int index, HashMap<String, PortDescriptor> ports) {
+    private void addGeneratorsDeclaration(int index, HashMap<String, PortDescriptor> ports) {
         for (String name: ports.keySet()) {
             if (!name.toLowerCase().contains("clk") && !name.toLowerCase().contains("clock")) {
                 /* When unpacked size of port equals 0. */
@@ -216,7 +216,7 @@ public class ReadDriverCodegen extends Codegen {
                     String unpackedSize = decodeSizeReferencing(inputs.get(name).getUnpackedSize());
 
                     for (int lineNum = CHECK_SIZE_UNPACKED.length - 1; lineNum >= 0; lineNum--) {
-                        String editedLine = CHECK_SIZE_UNPACKED[lineNum].replace("port_name", name);
+                        String editedLine = CHECK_SIZE_UNPACKED[lineNum].replace("<port_name>", name);
                         editedLine = editedLine.replace("PARAMETER - 1", decodeSizeReferencing(unpackedSize));
                         add(index, editedLine);
                     }
@@ -227,11 +227,11 @@ public class ReadDriverCodegen extends Codegen {
 
                 /* Checking packed inputs. */
                 if (!previousName.equals("null")) {
-                    String editedLine = CHECK_SIZE[0].replace("prev_port_name", previousName);
+                    String editedLine = CHECK_SIZE[0].replace("prev_<port_name>", previousName);
                     if (!inputs.get(previousName).getUnpackedSize().equals("")) {
                         editedLine = editedLine.replace(previousName, previousName + "[0]");
                     }
-                    editedLine = editedLine.replace("next_port_name", name);
+                    editedLine = editedLine.replace("next_<port_name>", name);
                     if (!inputs.get(name).getUnpackedSize().equals("")) {
                         editedLine = editedLine.replace(name, name + "[0]");
                     }

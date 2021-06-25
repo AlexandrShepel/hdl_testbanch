@@ -222,6 +222,6 @@ public class Codegen extends ArrayList<String> {
 
     protected void addPortReplaceName(final int index, final String name, final String size, final String[] macro) {
         for (int i = macro.length - 1; i >= 0; i--)
-            add(index, macro[i].replace("port_name", name).replace("PARAMETER - 1", size));
+            add(index, macro[i].replace("<port_name>", name).replace("PARAMETER - 1", size));
     }
 }

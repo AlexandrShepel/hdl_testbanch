@@ -21,8 +21,8 @@ public class TBCodegen extends Codegen {
 
     /* Folders where will be placed input and output vectors
     that used to test DUT and check correctness of its work. */
-    private static final String DEFAULT_INPUT_FOLDER = "\\input_data";
-    private static final String DEFAULT_OUTPUT_FOLDER = "\\output_data";
+    private static final String DEFAULT_INPUT_FOLDER = "input_data";
+    private static final String DEFAULT_OUTPUT_FOLDER = "output_data";
 
     /**
      * The class constructor.
@@ -160,62 +160,26 @@ public class TBCodegen extends Codegen {
      */
     public void setWorkingFolder(File workingFolder) {
         this.workingFolder = workingFolder;
-        setInputDataFolder();
-        setOutputDataFolder();
+        setDataFolders();
     }
 
     /**
      * Sets a name of directory where will be placed input vectors,
      * that contains input data for simulation.
      */
-    private void setInputDataFolder() {
-        File inputData = new File(workingFolder.getAbsolutePath() + DEFAULT_INPUT_FOLDER);
-        boolean isInputFolderCreated = inputData.mkdir();
-        if (!isInputFolderCreated)
-            System.out.println("Error when creating a new folder: " + inputData.getAbsolutePath() +
+    private void setDataFolders() {
+        File inputFolder = new File(workingFolder.getAbsolutePath() + "\\" + DEFAULT_INPUT_FOLDER);
+        File outputFolder = new File(workingFolder.getAbsolutePath() + "\\" + DEFAULT_OUTPUT_FOLDER);
+
+        if (!inputFolder.mkdir() || !outputFolder.mkdir())
+            System.out.println("Error when creating a new folder: " + inputFolder.getAbsolutePath() +
                     ". Check that specified working folder is empty.");
 
         for (int index = 0; index < size(); index++) {
-            if (get(index).equals("\tconst string READ_FILES = \"./readFolder/\";")) {
-                String path = inputData.getAbsolutePath();
-
-                while (path.contains("\\")) {
-                    path = path.replace("\\", "/");
-                }
-
-                String editedLine = get(index).replace(
-                        "./readFolder/", path);
-                set(index, editedLine);
-
-                break;
-            }
-        }
-    }
-
-    /**
-     * Sets a name of directory where will be placed output vectors,
-     * that contains results of DUT's simulation.
-     */
-    private void setOutputDataFolder() {
-        File outputData = new File(workingFolder.getAbsolutePath() + DEFAULT_OUTPUT_FOLDER);
-        boolean isOutputFolderCreated = outputData.mkdir();
-        if (!isOutputFolderCreated)
-            System.out.println("Error when creating a new folder: " + outputData.getAbsolutePath() +
-                    ". Check that specified working folder is empty.");
-
-        for (int index = 0; index < size(); index++) {
-            if (get(index).equals("\tconst string WRITE_FILES = \"./writeFolder/\";")) {
-                String path = outputData.getAbsolutePath();
-
-                while (path.contains("\\")) {
-                    path = path.replace("\\", "/");
-                }
-
-                String editedLine = get(index).replace("./writeFolder/", path);
-                set(index, editedLine);
-
-                break;
-            }
+            set(index, get(index).replace(
+                    "<project_path>", workingFolder.getAbsolutePath().replace("\\", "/")));
+            set(index, get(index).replace("<input_data_folder>", DEFAULT_INPUT_FOLDER));
+            set(index, get(index).replace("<output_data_folder>", DEFAULT_OUTPUT_FOLDER));
         }
     }
 }

@@ -66,22 +66,21 @@ class ReadGenerator #(
         integer getFaults, scanFaults;
         string fileLine;    // The store box for the line of the file, that will be read below.
         this.filePath = filePath;
-        this.fd = $fopen(filePath, "r");
+        fd = $fopen(filePath, "r");
         
-        if (this.fd) begin
+        if (fd) begin
             $display("File was opened successfully: %s", filePath);
 
             while (!$feof(fd)) begin
-                this.vector = new [this.vector.size() + 1] (this.vector);
-                getFaults = $fgets(fileLine, this.fd);
-                scanFaults = $sscanf(fileLine, "%h", this.vector[this.vector.size() - 1]);
+                vector = new [vector.size() + 1] (vector);
+                getFaults = $fgets(fileLine, fd);
+                scanFaults = $sscanf(fileLine, "%h", vector[vector.size() - 1]);
 
-                if (getFaults == 0 || scanFaults == 0) begin
-                    $display("** Warning: Can't read/scan file line: %s", fileLine);
-                end
+                if (getFaults == 0 || scanFaults == 0)
+                    $display("** Warning: Can't read/scan file: %s", filePath);
             end
 
-            $fclose(this.fd);
+            $fclose(fd);
         end
 
     endfunction
@@ -91,8 +90,7 @@ class ReadGenerator #(
         Switches to the next (or specified) simulation point and returns it.
     */
     function bit signed [DATA_WIDTH - 1 : 0] getPoint();
-        // $display("The actual simulation point is: %h", this.vector[this.index]);
-        return this.vector[this.index];
+        return vector[index];
     endfunction
 
 
@@ -100,7 +98,7 @@ class ReadGenerator #(
         Returns the actual point index of the testing vector.
     */
     function int getIndex();
-        return this.index;
+        return index;
     endfunction
 
 
@@ -108,14 +106,12 @@ class ReadGenerator #(
         Sets the point index of the testing vector.
     */
     function void setIndex(int index);
-        if (index >= this.vector.size()) begin
+        if (index >= vector.size()) begin
             $display("ERROR: The index %0d is out of the vector size.", index);
-            $display("       Vector indexes must be in range [0 : %0d].", this.vector.size() - 1);
-            $display("       Input data file: %0s", this.filePath);
-        end else begin
+            $display("       Vector indexes must be in range [0 : %0d].", vector.size() - 1);
+            $display("       Input data file: %0s", filePath);
+        end else
             this.index = index;
-            // $display("The actual index is: %0d", this.index);
-        end
     endfunction
 
 
@@ -123,7 +119,7 @@ class ReadGenerator #(
         Returns the size of the testing vector.
     */
     function int getSize();
-        return this.vector.size();
+        return vector.size();
     endfunction
 
 

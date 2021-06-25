@@ -16,48 +16,38 @@ import java.util.HashMap;
 public class CheckerCodegen extends Codegen {
 
     private static final String[] MISMATCH_INIT = {
-            "\t\tiface.port_name_errors = 0;",
+            "\t\tiface.<port_name>_errors = 0;",
     };
 
     private static final String[] MISMATCH_INIT_UNPACKED = {
             "\t\tfor (int i = 0; i <= PARAMETER - 1; i++) begin",
-            "\t\t   iface.port_name_errors[i] = 0;",
+            "\t\t   iface.<port_name>_errors[i] = 0;",
             "\t\tend",
     };
 
     private static final String[] MISMATCH = {
-            "\t\tbit isEqual = (iface.port_name !== iface.port_name_expect);",
-            "\t\tbit isDefined = (iface.port_name_expect !== 'x);",
-            "\t\tiface.port_name_mismatch = isEqual && isDefined;",
+            "\t\tbit isEqual = (iface.<port_name> !== iface.<port_name>_expect);",
+            "\t\tbit isDefined = (iface.<port_name>_expect !== 'x);",
+            "\t\tiface.<port_name>_mismatch = isEqual && isDefined;",
     };
 
     private static final String[] MISMATCH_UNPACKED = {
             "\t\tfor (int i = 0; i <= PARAMETER - 1; i++) begin",
-            "\t\t   bit isEqual = (iface.port_name[i] !== iface.port_name_expect[i]);",
-            "\t\t   bit isDefined = (iface.port_name_expect[i] !== 'x);",
-            "\t\t   iface.port_name_mismatch[i] = isEqual && isDefined;",
+            "\t\t   bit isEqual = (iface.<port_name>[i] !== iface.<port_name>_expect[i]);",
+            "\t\t   bit isDefined = (iface.<port_name>_expect[i] !== 'x);",
+            "\t\t   iface.<port_name>_mismatch[i] = isEqual && isDefined;",
             "\t\tend",
     };
 
     private static final String[] MISMATCH_COUNT = {
-            "\t\tif (iface.port_name_mismatch)",
-            "\t\t   iface.port_name_errors++;",
+            "\t\tif (iface.<port_name>_mismatch)",
+            "\t\t   iface.<port_name>_errors++;",
     };
 
     private static final String[] MISMATCH_COUNT_UNPACKED = {
             "\t\tfor (int i = 0; i <= PARAMETER - 1; i++) begin",
-            "\t\t   if (iface.port_name_mismatch[i])",
-            "\t\t       iface.port_name_errors[i]++;",
-            "\t\tend",
-    };
-
-    private static final String[] MISMATCH_DISPLAY = {
-            "\t\t$display(\"\\tport \\\"port_name\\\": %0d\", iface.port_name_errors);",
-    };
-
-    private static final String[] MISMATCH_DISPLAY_UNPACKED = {
-            "\t\tfor (int i = 0; i <= PARAMETER - 1; i++) begin",
-            "\t\t   $display(\"\\tport \\\"port_name[i]\\\": %0d\", iface.port_name_errors[i]);",
+            "\t\t   if (iface.<port_name>_mismatch[i])",
+            "\t\t       iface.<port_name>_errors[i]++;",
             "\t\tend",
     };
 
@@ -69,7 +59,7 @@ public class CheckerCodegen extends Codegen {
     public void setOutputs(HashMap<String, PortDescriptor> outputs) {
         for (int index = 0; index < size(); index++) {
             /* Adds ports checking initialization. */
-            if (get(index).contains("iface.port_name_errors = 0;")) {
+            if (get(index).contains("iface.<port_name>_errors = 0;")) {
                 remove(index);
                 definePackingAddPort(false, index, outputs, MISMATCH_INIT, MISMATCH_INIT_UNPACKED);
             }
@@ -81,10 +71,6 @@ public class CheckerCodegen extends Codegen {
             /* Adds errors counting. */
             else if (get(index).contains("function void countError();"))
                 definePackingAddPort(false, ++index, outputs, MISMATCH_COUNT, MISMATCH_COUNT_UNPACKED);
-
-            /* Adds errors count displaying. */
-            else if (get(index).contains("function void displayMismatches();"))
-                definePackingAddPort(false, index += 2, outputs, MISMATCH_DISPLAY, MISMATCH_DISPLAY_UNPACKED);
         }
     }
 }

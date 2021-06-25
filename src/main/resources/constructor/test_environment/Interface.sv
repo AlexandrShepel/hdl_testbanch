@@ -30,4 +30,6 @@ interface Interface;
 
     // TB internal signals:
 
+    bit test_passed;
+
 endinterface
