@@ -130,8 +130,21 @@ public class Frontend extends JFrame implements FrontendParameters {
      *         Value contains a MyButton object.
      *         Key contains a name of this button.
      */
-    public static HashMap<String, PresetButton> getButtonsHashMap() {
+    public static Map<String, PresetButton> getButtPanelMap() {
         return ButtonsPanel.getButtonsHashMap();
+    }
+
+
+    /**
+     * Returns a HashMap that contains all buttons represented
+     * on the bottom panel of the app's window.
+     *
+     * @return The HashMap object.
+     *         Value contains a MyButton object.
+     *         Key contains a name of this button.
+     */
+    public Map<String, PresetButton> getResultPageButtMap() {
+        return mainPanel.getButtons();
     }
 
     /**

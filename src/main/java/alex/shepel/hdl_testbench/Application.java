@@ -2,6 +2,7 @@ package alex.shepel.hdl_testbench;
 
 import alex.shepel.hdl_testbench.backend.Backend;
 import alex.shepel.hdl_testbench.frontend.Frontend;
+import alex.shepel.hdl_testbench.frontend.widgets.PresetButton;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -35,10 +36,8 @@ public class Application implements ActionListener {
 
         /* Adds action listeners
         to the control buttons of the app's window. */
-        Frontend.getButtonsHashMap().get("< Back").addActionListener(this);
-        Frontend.getButtonsHashMap().get("Next >").addActionListener(this);
-        Frontend.getButtonsHashMap().get("Help").addActionListener(this);
-        Frontend.getButtonsHashMap().get("Finish").addActionListener(this);
+        for (PresetButton butt: Frontend.getButtPanelMap().values())
+            butt.addActionListener(this);
 
         /* Initializes Backend object. */
         try {
@@ -64,17 +63,20 @@ public class Application implements ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equals("< Back"))
-            frontend.back();
-
-        if (e.getActionCommand().equals("Next >"))
-            if (doBackendAction()) frontend.next();
-
-        if (e.getActionCommand().equals("Help"))
-            frontend.help();
-
-        if (e.getActionCommand().equals("Finish"))
-            frontend.finish();
+        switch (e.getActionCommand()) {
+            case "< Back" ->
+                    frontend.back();
+            case "Next >" -> {
+                if (doBackendAction())
+                    frontend.next();
+            }
+            case "Help" ->
+                    frontend.help();
+            case "Finish" ->
+                    frontend.finish();
+            case "Refresh" ->
+                    doBackendAction();
+        }
     }
 
     /**
@@ -101,8 +103,15 @@ public class Application implements ActionListener {
                     backend.setReportSamplingFrequency(frontend.getReportSamplingFrequency());
                     backend.generateEnvironment();
                 }
-                case "Run ModelSim" ->
+                case "Run ModelSim" -> {
                     frontend.showResults(backend.getResultStats());
+
+                    for (PresetButton butt: frontend.getResultPageButtMap().values())
+                        butt.addActionListener(this);
+                }
+                case "Results displaying" -> {
+                    frontend.showResults(backend.getResultStats());
+                }
                 default -> {
                     return false;
                 }

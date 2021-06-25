@@ -5,10 +5,7 @@ import alex.shepel.hdl_testbench.frontend.widgets.PresetButton;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /*
  * File: Page4.java
@@ -53,6 +50,8 @@ public class Page5 extends JPanel implements FrontendParameters {
     private final Color PASSED_COLOR = new Color(125, 250, 125);
     private final Color FAILED_COLOR = new Color(250, 125, 125);
 
+    private final HashMap<String, PresetButton> buttons = new HashMap<>();
+
     /*
      * The information that is displayed on the top of application window.
      *
@@ -91,9 +90,11 @@ public class Page5 extends JPanel implements FrontendParameters {
     }
 
     public void showResults(Map<String, Integer> resultStats, String dutName) {
+        removeAll();
         setCommonReport(resultStats, dutName);
-        setButton();
         setDetailedReport(resultStats);
+        addButton("Open log.txt");
+        addButton("Refresh");
     }
 
     /**
@@ -115,10 +116,10 @@ public class Page5 extends JPanel implements FrontendParameters {
     /**
      * Sets and adds the JButton object to the page.
      */
-    private void setButton() {
-        PresetButton button = new PresetButton("Open log.txt");
+    private void addButton(String name) {
+        PresetButton button = new PresetButton(name);
         button.setPreferredSize(new Dimension((int) (BUTTON_WIDTH * 2.5), BUTTON_HEIGHT));
-        button.addActionListener(e -> openReportFile());
+        buttons.put(name, button);
         add(button);
     }
 
@@ -175,18 +176,15 @@ public class Page5 extends JPanel implements FrontendParameters {
     }
 
     /**
-     * Opens "TestBenchReport.txt" file.
-     */
-    private void openReportFile() {
-        // TODO: Make implementation of opening TestBenchReport.txt file.
-    }
-
-    /**
      * Returns a name of the page.
      *
      * @return The String value of the page's name.
      */
     public String getName() {
         return PAGE_NAME;
+    }
+
+    public HashMap<String, PresetButton> getButtons() {
+        return buttons;
     }
 }

@@ -7,6 +7,7 @@ import alex.shepel.hdl_testbench.frontend.mainPanel.pages.Page1;
 import alex.shepel.hdl_testbench.frontend.mainPanel.pages.Page3;
 import alex.shepel.hdl_testbench.frontend.mainPanel.pages.Page4;
 import alex.shepel.hdl_testbench.frontend.mainPanel.pages.Page5;
+import alex.shepel.hdl_testbench.frontend.widgets.PresetButton;
 
 import javax.swing.*;
 import java.awt.*;
@@ -181,5 +182,9 @@ public class MainPanel extends JLayeredPane implements FrontendParameters {
 
     public void showResults(Map<String, Integer> resultStats) {
         p5.showResults(resultStats, p0.getDutFile().getName());
+    }
+
+    public HashMap<String, PresetButton> getButtons() {
+        return p5.getButtons();
     }
 }
