@@ -40,14 +40,18 @@ public class CheckerCodegen extends Codegen {
     };
 
     private static final String[] MISMATCH_COUNT = {
-            "\t\tif (iface.<port_name>_mismatch)",
+            "\t\tif (iface.<port_name>_mismatch) begin",
             "\t\t   iface.<port_name>_errors++;",
+            "\t\t   iface.test_passed = 0;",
+            "\t\tend",
     };
 
     private static final String[] MISMATCH_COUNT_UNPACKED = {
             "\t\tfor (int i = 0; i <= PARAMETER - 1; i++) begin",
-            "\t\t   if (iface.<port_name>_mismatch[i])",
+            "\t\t   if (iface.<port_name>_mismatch[i]) begin",
             "\t\t       iface.<port_name>_errors[i]++;",
+            "\t\t       iface.test_passed = 0;",
+            "\t\t   end",
             "\t\tend",
     };
 

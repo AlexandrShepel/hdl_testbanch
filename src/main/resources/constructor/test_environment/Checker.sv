@@ -26,6 +26,7 @@ class Checker #(
     */
     function new(virtual Interface iface);
         this.iface = iface;
+        iface.test_passed = 1;
         iface.<port_name>_errors = 0;
     endfunction
 

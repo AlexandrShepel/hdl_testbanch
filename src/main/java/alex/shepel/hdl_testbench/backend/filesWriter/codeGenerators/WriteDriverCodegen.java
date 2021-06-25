@@ -19,12 +19,14 @@ public class WriteDriverCodegen extends Codegen {
     Used when unpacked size of input port equals to 0. */
     private static final String[] GENERATOR_DECLARE = {
             "\tWriteGenerator gen_<port_name>;",
+            "\tWriteGenerator gen_<port_name>_mismatch;",
     };
 
     /* The template of code for declaration of WriteGenerator object.
     Used when unpacked size of input port larger then 0. */
     private static final String[] GENERATOR_DECLARE_UNPACKED = {
             "\tWriteGenerator gen_<port_name> [PARAMETER - 1 + 1];",
+            "\tWriteGenerator gen_<port_name>_mismatch [PARAMETER - 1 + 1];",
     };
 
     /* The template of code for initialization of WriteGenerator object.

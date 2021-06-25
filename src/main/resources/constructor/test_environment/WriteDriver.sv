@@ -92,11 +92,11 @@ class WriteDriver #(
         void'($system("time /t >> temp.txt"));
 
         temp_fd = $fopen("temp.txt", "r");
-        void'($fscanf(fd, "%s", localdate));
-        void'($fscanf(fd, "%s", localtime));
+        void'($fscanf(temp_fd, "%s", localdate));
+        void'($fscanf(temp_fd, "%s", localtime));
 
         $fclose(temp_fd);
-        void'($system("del time.txt"));
+        void'($system("del temp.txt"));
 
         return {localtime, " ", localdate};
     endfunction

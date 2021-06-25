@@ -141,8 +141,6 @@ module tb ();
     */
     task stopSimulation();
         writeDriver.close();
-        readDriver.close();
-
         $stop();
     endtask
 
