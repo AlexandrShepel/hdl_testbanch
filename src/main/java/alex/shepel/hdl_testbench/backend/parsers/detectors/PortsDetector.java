@@ -153,10 +153,10 @@ public class PortsDetector {
      *         If port is not packed, returns empty string.
      */
     private String getPackedSize(String codeLine) {
-        if (codeLine.indexOf('[') == 0)
-            return codeLine.substring(codeLine.indexOf('['), codeLine.indexOf(']') + 1);
+        if (codeLine.indexOf('[') < 0)
+            return "";
 
-        return "";
+        return codeLine.substring(codeLine.indexOf('['), codeLine.indexOf(']') + 1);
     }
 
     /**

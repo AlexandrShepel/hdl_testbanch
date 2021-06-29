@@ -35,6 +35,8 @@ class Checker #(
         Checks actual and expected DUT output data
     */
     function void mismatch();
+        bit isEqual = 0;
+        bit isDefined = 0;
     endfunction
 
 
