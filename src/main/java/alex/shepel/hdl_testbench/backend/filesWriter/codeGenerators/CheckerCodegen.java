@@ -26,16 +26,16 @@ public class CheckerCodegen extends Codegen {
     };
 
     private static final String[] MISMATCH = {
-            "\t\tisEqual = (iface.<port_name> !== iface.<port_name>_expect);",
+            "\t\tisEqual = (iface.<port_name> == iface.<port_name>_expect);",
             "\t\tisDefined = (iface.<port_name>_expect !== 'x);",
-            "\t\tiface.<port_name>_mismatch = isEqual && isDefined;",
+            "\t\tiface.<port_name>_mismatch = ~isEqual && isDefined;",
     };
 
     private static final String[] MISMATCH_UNPACKED = {
             "\t\tfor (int i = 0; i <= PARAMETER - 1; i++) begin",
-            "\t\t   isEqual = (iface.<port_name>[i] !== iface.<port_name>_expect[i]);",
+            "\t\t   isEqual = (iface.<port_name>[i] == iface.<port_name>_expect[i]);",
             "\t\t   isDefined = (iface.<port_name>_expect[i] !== 'x);",
-            "\t\t   iface.<port_name>_mismatch[i] = isEqual && isDefined;",
+            "\t\t   iface.<port_name>_mismatch[i] = ~isEqual && isDefined;",
             "\t\tend",
     };
 

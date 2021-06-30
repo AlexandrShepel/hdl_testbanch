@@ -74,13 +74,12 @@ class ReadDriver #(
     /*
         Checks that generators contains equal number of the simulation points.
     */
-    local function void checkSize();
+    local function bit checkSize();
         bit isTrue = 1;
         
         if (!isTrue) begin
             $display ("WARNING: Input data vectors have unequal sizes.");
-            $display ("         Check spaces in the source file.");
-            $display ("         Notice that empty strings are read as zeros by default.");
+            $display("          Note that input file must NOT have empty lines.\n");
             $stop();
         end
     endfunction

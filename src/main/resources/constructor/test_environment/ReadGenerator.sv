@@ -44,7 +44,7 @@ class ReadGenerator #(
 
     // The vector, that stores a testing values.
     // They are read from file with testing data.
-    local bit signed [DATA_WIDTH - 1 : 0] vector [];
+    local logic signed [DATA_WIDTH - 1 : 0] vector [];
 
     // The current index of the testing vector point.
     local int index;
@@ -63,33 +63,50 @@ class ReadGenerator #(
         Reads the test input vector from the file.
     */
     function void open(string filePath);
-        integer getFaults, scanFaults;
+        integer readFaults, scanFaults;
         string fileLine;    // The store box for the line of the file, that will be read below.
         this.filePath = filePath;
         fd = $fopen(filePath, "r");
         
         if (fd) begin
-            $display("File was opened successfully: %s", filePath);
+            $display("File was opened successfully: %s\n", filePath);
 
             while (!$feof(fd)) begin
                 vector = new [vector.size() + 1] (vector);
-                getFaults = $fgets(fileLine, fd);
+                readFaults = $fgets(fileLine, fd);
                 scanFaults = $sscanf(fileLine, "%h", vector[vector.size() - 1]);
-
-                if (getFaults == 0 || scanFaults == 0)
-                    $display("** Warning: Can't read/scan file: %s", filePath);
+                checkReadingScanning(readFaults, scanFaults);
             end
 
             $fclose(fd);
         end
+    endfunction
 
+
+    /*
+        Checks reading and scanning operations for the success.
+        Prints warnings to the console when fail is found.
+    */
+    local function void checkReadingScanning(integer readFaults, integer scanFaults);
+        if (readFaults == 0) begin
+            $display("** Warning: Can't read file: %s\n", filePath);
+            iface.test_passed = 0;
+        end
+
+        if (scanFaults == 0) begin
+            $display("** Warning: Can't interpret input data: %s", filePath);
+            $display("            Note that:");
+            $display("            a) input files must NOT have empty lines.");
+            $display("            b) input data must have hexadecimal format.\n");
+            iface.test_passed = 0;
+        end
     endfunction
 
 
     /*
         Switches to the next (or specified) simulation point and returns it.
     */
-    function bit signed [DATA_WIDTH - 1 : 0] getPoint();
+    function logic signed [DATA_WIDTH - 1 : 0] getPoint();
         return vector[index];
     endfunction
 

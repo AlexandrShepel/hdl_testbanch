@@ -60,7 +60,8 @@ public class PortDescriptor {
      *         SystemVerilog/Verilog module's port declaration.
      */
     public String toString() {
-        StringBuilder result = new StringBuilder("bit");
+        StringBuilder result = new StringBuilder(
+                type.equals("") ? "logic" : type);
 
         if (!signed.equals(""))
             result.append(" ").append(signed);

@@ -82,8 +82,8 @@ public class InterfaceCodegen extends Codegen {
                 for (PortDescriptor desc : outputs.values()) {
                     final String expectName = desc.getName() + "_expect";
                     add(++index, "\t" + desc.toString().replace(desc.getName(), expectName) + ";");
-                    add(index, "\t" + toExtraPort(desc, "mismatch") + ";");
-                    add(index, "\t" + toExtraPort(desc, "errors") + ";");
+                    add(++index, "\t" + toExtraPort(desc, "mismatch") + ";");
+                    add(++index, "\t" + toExtraPort(desc, "errors") + ";");
                 }
         }
     }
