@@ -1,7 +1,7 @@
-package alex.shepel.hdl_testbench.frontend.panels.pages;
+package frontend.panels.pages;
 
-import alex.shepel.hdl_testbench.frontend.FrontendParameters;
-import alex.shepel.hdl_testbench.frontend.widgets.PresetTextArea;
+import frontend.FrontendParameters;
+import frontend.widgets.PresetTextArea;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream:src/alex.shepel/main/java/frontend/panels/ProgressPanel.java
-package alex.shepel.hdl_testbench.frontend.panels;
-=======
 package frontend.panels;
->>>>>>> Stashed changes:src/main/java/alex/shepel/hdl_testbench/frontend/progressPanel/ProgressPanel.java
 
 import frontend.FrontendParameters;
 

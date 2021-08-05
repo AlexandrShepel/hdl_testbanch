@@ -1,12 +1,7 @@
 package backend;
 
-<<<<<<< Updated upstream:src/main/java/alex/shepel/hdl_testbench/backend/Backend.java
-import alex.shepel.hdl_testbench.backend.filesWriter.FilesWriter;
-import alex.shepel.hdl_testbench.backend.parsers.Parser;
-=======
 import backend.filesWriter.FilesWriter;
 import backend.parsers.Parser;
->>>>>>> Stashed changes:src/alex.shepel/main/java/backend/Backend.java
 
 import java.io.File;
 import java.io.IOException;
@@ -59,11 +54,7 @@ public class Backend {
      *                      of the working folder.
      */
     public void setWorkingFolder(File workingFolder) {
-<<<<<<< Updated upstream:src/main/java/alex/shepel/hdl_testbench/backend/Backend.java
-        filesWriter.setWorkingFolder(workingFolder);
-=======
         filesWriter.setDirectory(workingFolder);
->>>>>>> Stashed changes:src/alex.shepel/main/java/backend/Backend.java
     }
 
     /**

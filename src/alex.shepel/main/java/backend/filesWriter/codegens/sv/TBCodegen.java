@@ -1,12 +1,7 @@
 package backend.filesWriter.codegens.sv;
 
-<<<<<<< Updated upstream:src/alex.shepel/main/java/backend/filesWriter/codegens/sv/TBCodegen.java
-import alex.shepel.hdl_testbench.backend.BackendParameters;
-import alex.shepel.hdl_testbench.backend.parsers.detectors.PortDescriptor;
-=======
 import backend.BackendParameters;
 import backend.parsers.detectors.PortDescriptor;
->>>>>>> Stashed changes:src/main/java/alex/shepel/hdl_testbench/backend/filesWriter/codeGenerators/TBCodeGenerator.java
 
 import java.io.File;
 import java.io.IOException;
@@ -19,14 +14,7 @@ import java.util.HashMap;
  * Overwrites "BackendParameters.TB_SV" file
  * based on specified data.
  */
-<<<<<<< Updated upstream:src/alex.shepel/main/java/backend/filesWriter/codegens/sv/TBCodegen.java
-public class TBCodegen extends Codegen {
-
-    /* The working folder, where must be placed generated file. */
-    private File workingFolder;
-=======
 public class TBCodegen extends SVCodegen implements BackendParameters {
->>>>>>> Stashed changes:src/main/java/alex/shepel/hdl_testbench/backend/filesWriter/codeGenerators/TBCodeGenerator.java
 
     /* Folders where will be placed input and output vectors
     that used to test DUT and check correctness of its work. */
@@ -40,12 +28,7 @@ public class TBCodegen extends SVCodegen implements BackendParameters {
      *                     (file stores in the resource directory).
      */
     public TBCodegen() throws IOException {
-<<<<<<< Updated upstream:src/alex.shepel/main/java/backend/filesWriter/codegens/sv/TBCodegen.java
-        parseFile(BackendParameters.TB_SV);
-        setDate();
-=======
         super(TB_SV);
->>>>>>> Stashed changes:src/main/java/alex/shepel/hdl_testbench/backend/filesWriter/codeGenerators/TBCodeGenerator.java
     }
 
     /**
@@ -137,11 +120,7 @@ public class TBCodegen extends SVCodegen implements BackendParameters {
      *                      between DUT's and clk_hub's modules.
      */
     @SuppressWarnings("SuspiciousListRemoveInLoop")
-<<<<<<< Updated upstream:src/alex.shepel/main/java/backend/filesWriter/codegens/sv/TBCodegen.java
-    public void setClockDriver(HashMap<String, String> clocksHashMap) {
-=======
     public void setClocks(HashMap<String, String> clocksHashMap) {
->>>>>>> Stashed changes:src/main/java/alex/shepel/hdl_testbench/backend/filesWriter/codeGenerators/TBCodeGenerator.java
         for (int index = 0; index < size(); index++) {
             /* Sets clock driver parameters. */
             if (get(index).contains(".DUT_CLK_FREQ")) {
@@ -167,36 +146,6 @@ public class TBCodegen extends SVCodegen implements BackendParameters {
     }
 
     /**
-<<<<<<< Updated upstream:src/alex.shepel/main/java/backend/filesWriter/codegens/sv/TBCodegen.java
-     * Sets a directory where will be placed
-     * overwritten file.
-     *
-     * @param workingFolder The File object that contains path
-     *                      to the working folder,
-     *                      where overwritten file
-     *                      will be placed.
-     */
-    public void setWorkingFolder(File workingFolder) {
-        this.workingFolder = workingFolder;
-        setDataFolders();
-    }
-
-    /**
-     * Sets a name of directory where will be placed input vectors,
-     * that contains input data for simulation.
-     */
-    private void setDataFolders() {
-        File inputFolder = new File(workingFolder.getAbsolutePath() + "\\" + DEFAULT_INPUT_FOLDER);
-        File outputFolder = new File(workingFolder.getAbsolutePath() + "\\" + DEFAULT_OUTPUT_FOLDER);
-
-        if (!inputFolder.mkdir() || !outputFolder.mkdir())
-            System.out.println("Error when creating a new folder: " + inputFolder.getAbsolutePath() +
-                    ". Check that specified working folder is empty.");
-
-        for (int index = 0; index < size(); index++) {
-            set(index, get(index).replace(
-                    "<project_path>", workingFolder.getAbsolutePath().replace("\\", "/")));
-=======
      * Sets a name of directory where will be placed input vectors,
      * that contains input data for simulation.
      *
@@ -218,7 +167,6 @@ public class TBCodegen extends SVCodegen implements BackendParameters {
         for (int index = 0; index < size(); index++) {
             set(index, get(index).replace(
                     "<project_path>", dir.getAbsolutePath().replace("\\", "/")));
->>>>>>> Stashed changes:src/main/java/alex/shepel/hdl_testbench/backend/filesWriter/codeGenerators/TBCodeGenerator.java
             set(index, get(index).replace("<input_data_folder>", DEFAULT_INPUT_FOLDER));
             set(index, get(index).replace("<output_data_folder>", DEFAULT_OUTPUT_FOLDER));
         }

@@ -1,14 +1,6 @@
-<<<<<<< Updated upstream:src/main/java/alex/shepel/hdl_testbench/Application.java
-package alex.shepel.hdl_testbench;
-
-import alex.shepel.hdl_testbench.backend.Backend;
-import alex.shepel.hdl_testbench.frontend.Frontend;
-import alex.shepel.hdl_testbench.frontend.widgets.PresetButton;
-=======
 import backend.Backend;
 import frontend.Frontend;
 import frontend.widgets.PresetButton;
->>>>>>> Stashed changes:src/alex.shepel/main/java/Application.java
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

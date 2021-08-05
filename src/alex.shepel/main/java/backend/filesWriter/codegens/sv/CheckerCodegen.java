@@ -1,7 +1,7 @@
-package alex.shepel.hdl_testbench.backend.filesWriter.codeGenerators;
+package backend.filesWriter.codegens.sv;
 
-import alex.shepel.hdl_testbench.backend.BackendParameters;
-import alex.shepel.hdl_testbench.backend.parsers.detectors.PortDescriptor;
+import backend.BackendParameters;
+import backend.parsers.detectors.PortDescriptor;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -13,7 +13,7 @@ import java.util.HashMap;
  * Overwrites "BackendParameters.READ_DRIVER_SV" file
  * based on specified data.
  */
-public class CheckerCodegen extends Codegen {
+public class CheckerCodegen extends SVCodegen implements BackendParameters {
 
     private static final String[] MISMATCH_INIT = {
             "\t\tiface.<port_name>_errors = 0;",
@@ -56,8 +56,7 @@ public class CheckerCodegen extends Codegen {
     };
 
     public CheckerCodegen() throws IOException {
-        parseFile(BackendParameters.CHECKER_SV);
-        setDate();
+        super(CHECKER_SV);
     }
 
     public void setOutputs(HashMap<String, PortDescriptor> outputs) {

@@ -1,11 +1,11 @@
-package alex.shepel.hdl_testbench.backend.filesWriter.codeGenerators;
+package backend.filesWriter.codegens.sv;
 
-import alex.shepel.hdl_testbench.backend.BackendParameters;
+import backend.BackendParameters;
 
 import java.io.IOException;
 import java.util.HashMap;
 
-public class ClockDriverCodegen extends Codegen {
+public class ClockDriverCodegen extends SVCodegen implements BackendParameters {
 
     /* The template of code.
     Used when packed and unpacked sizes of monitored port equals to 0. */
@@ -28,11 +28,10 @@ public class ClockDriverCodegen extends Codegen {
      *                     (file stores in the resource directory).
      */
     public ClockDriverCodegen() throws IOException {
-        parseFile(BackendParameters.CLK_DRIVER_SV);
-        setDate();
+        super(CLK_DRIVER_SV);
     }
 
-    public void setDutClocks(HashMap<String, String> clocksHashMap) {
+    public void setClocks(HashMap<String, String> clocksHashMap) {
         setLocalParameters(clocksHashMap);
         setClockOutputs(clocksHashMap);
         connectClockGenerators(clocksHashMap);

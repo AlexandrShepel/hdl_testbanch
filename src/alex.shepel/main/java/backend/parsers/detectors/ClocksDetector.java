@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream:src/alex.shepel/main/java/backend/parsers/detectors/ClocksDetector.java
-package alex.shepel.hdl_testbench.backend.parsers.detectors;
-=======
 package backend.parsers.detectors;
->>>>>>> Stashed changes:src/main/java/alex/shepel/hdl_testbench/backend/parser/detectors/ClocksDetector.java
 
 import java.util.ArrayList;
 import java.util.Set;

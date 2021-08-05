@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream:src/alex.shepel/main/java/backend/parsers/detectors/PortDescriptor.java
-package alex.shepel.hdl_testbench.backend.parsers.detectors;
-=======
 package backend.parsers.detectors;
->>>>>>> Stashed changes:src/main/java/alex/shepel/hdl_testbench/backend/parser/detectors/PortDescriptor.java
 
 /*
  * File: PortDescriptor.java
@@ -64,12 +60,7 @@ public class PortDescriptor {
      *         SystemVerilog/Verilog module's port declaration.
      */
     public String toString() {
-<<<<<<< Updated upstream:src/alex.shepel/main/java/backend/parsers/detectors/PortDescriptor.java
-        StringBuilder result = new StringBuilder(
-                type.equals("") ? "logic" : type);
-=======
         StringBuilder result = new StringBuilder("logic");
->>>>>>> Stashed changes:src/main/java/alex/shepel/hdl_testbench/backend/parser/detectors/PortDescriptor.java
 
         if (!signed.equals(""))
             result.append(" ").append(signed);

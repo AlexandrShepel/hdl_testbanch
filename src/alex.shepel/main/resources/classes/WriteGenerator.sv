@@ -57,13 +57,8 @@ class WriteGenerator;
     /*
         Writes text data to the file.
     */
-<<<<<<< Updated upstream:src/main/resources/constructor/test_environment/WriteGenerator.sv
-    function void write(string line);
-        $fdisplay(fd, "%0s", line);
-=======
     function void writeStr(string line);
         $fdisplay(fd, line);
->>>>>>> Stashed changes:src/alex.shepel/main/resources/classes/WriteGenerator.sv
     endfunction
 
 

@@ -1,12 +1,7 @@
 package backend.filesWriter.codegens.sv;
 
-<<<<<<< Updated upstream:src/alex.shepel/main/java/backend/filesWriter/codegens/sv/Codegen.java
-import alex.shepel.hdl_testbench.backend.parsers.Parser;
-import alex.shepel.hdl_testbench.backend.parsers.detectors.PortDescriptor;
-=======
 import backend.parsers.Parser;
 import backend.parsers.detectors.PortDescriptor;
->>>>>>> Stashed changes:src/alex.shepel/main/java/backend/filesWriter/codegens/sv/SVCodegen.java
 
 import java.io.*;
 import java.time.LocalDate;
@@ -21,19 +16,11 @@ import java.util.HashMap;
  * Saves it as list of code lines.
  * Overwrites existing code lines if needed.
  */
-<<<<<<< Updated upstream:src/alex.shepel/main/java/backend/filesWriter/codegens/sv/Codegen.java
-public class Codegen extends ArrayList<String> {
-
-    /* Properties of a file that can be overwritten. */
-    private HashMap<String, String> parameters;
-    private String fileName;
-=======
 public class SVCodegen extends ArrayList<String> {
 
     /* Properties of a file that can be overwritten. */
     private HashMap<String, String> parameters;
     private final String fileName;
->>>>>>> Stashed changes:src/alex.shepel/main/java/backend/filesWriter/codegens/sv/SVCodegen.java
 
     /**
      * -- Parses specified file.
@@ -45,12 +32,8 @@ public class SVCodegen extends ArrayList<String> {
     public SVCodegen(final String filePath) throws IOException {
         final ArrayList<String> pathElements = new ArrayList<>(Arrays.asList(filePath.split("/")));
         fileName = pathElements.get(pathElements.size() - 1);
-<<<<<<< Updated upstream:src/alex.shepel/main/java/backend/filesWriter/codegens/sv/Codegen.java
-        Parser parser = new Parser(filePath);
-=======
 
         final Parser parser = new Parser(filePath);
->>>>>>> Stashed changes:src/alex.shepel/main/java/backend/filesWriter/codegens/sv/SVCodegen.java
         addAll(parser.fileToArrayList());
         setDate();
     }
@@ -166,11 +149,7 @@ public class SVCodegen extends ArrayList<String> {
      * @param codedSize The unpacked size of port in a format of code.
      * @return The unpacked size of port in a number format.
      */
-<<<<<<< Updated upstream:src/alex.shepel/main/java/backend/filesWriter/codegens/sv/Codegen.java
-    public String decodeSizeReferencing(String codedSize) {
-=======
     protected String decodeSizeReferencing(String codedSize) {
->>>>>>> Stashed changes:src/alex.shepel/main/java/backend/filesWriter/codegens/sv/SVCodegen.java
         if (codedSize.length() == 0)
             return "0";
 
@@ -247,8 +226,6 @@ public class SVCodegen extends ArrayList<String> {
         for (int i = macro.length - 1; i >= 0; i--)
             add(index, macro[i].replace("<port_name>", name).replace("PARAMETER - 1", size));
     }
-<<<<<<< Updated upstream:src/alex.shepel/main/java/backend/filesWriter/codegens/sv/Codegen.java
-=======
 
     /* Abstract methods. */
     public void setClocks(HashMap<String, String> clocksHashMap) {}
@@ -257,5 +234,4 @@ public class SVCodegen extends ArrayList<String> {
     public void setOutputs(HashMap<String, PortDescriptor> ports) {}
     public void setInputs(HashMap<String, PortDescriptor> ports) {}
     public void setDirectory(File dir) {}
->>>>>>> Stashed changes:src/alex.shepel/main/java/backend/filesWriter/codegens/sv/SVCodegen.java
 }

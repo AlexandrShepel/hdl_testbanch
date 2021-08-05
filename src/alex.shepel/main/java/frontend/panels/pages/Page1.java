@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream:src/alex.shepel/main/java/frontend/panels/pages/Page1.java
-package alex.shepel.hdl_testbench.frontend.panels.pages;
-=======
 package frontend.panels.pages;
->>>>>>> Stashed changes:src/main/java/alex/shepel/hdl_testbench/frontend/configurationPanel/pages/Page1.java
 
 import frontend.FrontendParameters;
 import frontend.widgets.PresetButton;

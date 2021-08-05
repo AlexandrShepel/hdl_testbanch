@@ -1,18 +1,10 @@
 package frontend;
 
-<<<<<<< Updated upstream:src/main/java/alex/shepel/hdl_testbench/frontend/Frontend.java
-import alex.shepel.hdl_testbench.frontend.panels.ButtonsPanel;
-import alex.shepel.hdl_testbench.frontend.panels.MainPanel;
-import alex.shepel.hdl_testbench.frontend.helper.Helper;
-import alex.shepel.hdl_testbench.frontend.panels.ProgressPanel;
-import alex.shepel.hdl_testbench.frontend.widgets.PresetButton;
-=======
 import frontend.panels.ButtonsPanel;
 import frontend.panels.MainPanel;
 import frontend.helper.Helper;
 import frontend.panels.ProgressPanel;
 import frontend.widgets.PresetButton;
->>>>>>> Stashed changes:src/alex.shepel/main/java/frontend/Frontend.java
 
 import javax.swing.*;
 import java.awt.*;
@@ -161,15 +153,7 @@ public class Frontend extends JFrame implements FrontendParameters {
      * @return The File object of the working folder.
      * There must be placed test environment.
      */
-<<<<<<< Updated upstream:src/main/java/alex/shepel/hdl_testbench/frontend/Frontend.java
-    public File getWorkingFolder() throws IOException {
-        if (!mainPanel.getWorkingFolder().exists()) {
-            throw new IOException("Specify correct working folder.");
-        }
-
-=======
     public File getWorkingFolder() {
->>>>>>> Stashed changes:src/alex.shepel/main/java/frontend/Frontend.java
         return mainPanel.getWorkingFolder();
     }
 

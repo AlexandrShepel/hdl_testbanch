@@ -1,7 +1,7 @@
-package alex.shepel.hdl_testbench.backend.filesWriter.codeGenerators;
+package backend.filesWriter.codegens.sv;
 
-import alex.shepel.hdl_testbench.backend.BackendParameters;
-import alex.shepel.hdl_testbench.backend.parsers.detectors.PortDescriptor;
+import backend.BackendParameters;
+import backend.parsers.detectors.PortDescriptor;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -13,7 +13,7 @@ import java.util.HashMap;
  * Overwrites "BackendParameters.WRITE_DRIVER_SV" file
  * based on specified data.
  */
-public class WriteDriverCodegen extends Codegen {
+public class WriteDriverCodegen extends SVCodegen implements BackendParameters {
 
     /* The template of code for declaration of WriteGenerator object.
     Used when unpacked size of input port equals to 0. */
@@ -33,10 +33,10 @@ public class WriteDriverCodegen extends Codegen {
     Used when unpacked size of input port equals to 0. */
     private static final String[] GENERATOR_INIT = {
             "\t\tthis.gen_<port_name> = new();",
-            "\t\tthis.gen_<port_name>.open({$sformatf(\"%s\", filePath), \"/<port_name>.txt\"}, \"w\");",
+            "\t\tthis.gen_<port_name>.open({$sformatf(\"%s\", filePath), \"/<port_name>.tbv\"}, \"w\");",
             "",
             "\t\tthis.gen_<port_name>_mismatch = new();",
-            "\t\tthis.gen_<port_name>_mismatch.open({$sformatf(\"%s\", filePath), \"/<port_name>_mismatch.txt\"}, \"w\");",
+            "\t\tthis.gen_<port_name>_mismatch.open({$sformatf(\"%s\", filePath), \"/<port_name>_mismatch.tbv\"}, \"w\");",
     };
 
     /* The template of code for initialization of WriteGenerator object.
@@ -44,40 +44,40 @@ public class WriteDriverCodegen extends Codegen {
     private static final String[] GENERATOR_INIT_UNPACKED = {
             "\t\tfor (int i = 0; i <= PARAMETER - 1; i++) begin",
             "\t\t    this.gen_<port_name>[i] = new();",
-            "\t\t    this.gen_<port_name>[i].open({$sformatf(\"%s\", filePath), \"/<port_name>_\", $sformatf(\"%0d\", i), \".txt\"}, \"w\");",
+            "\t\t    this.gen_<port_name>[i].open({$sformatf(\"%s\", filePath), \"/<port_name>_\", $sformatf(\"%0d\", i), \".tbv\"}, \"w\");",
             "",
             "\t\t    this.gen_<port_name>_mismatch[i] = new();",
-            "\t\t    this.gen_<port_name>_mismatch[i].open({$sformatf(\"%s\", filePath), \"/<port_name>_mismatch_\", $sformatf(\"%0d\", i), \".txt\"}, \"w\");",
+            "\t\t    this.gen_<port_name>_mismatch[i].open({$sformatf(\"%s\", filePath), \"/<port_name>_mismatch_\", $sformatf(\"%0d\", i), \".tbv\"}, \"w\");",
             "\t\tend"
     };
 
     /* The template of code for running of WriteGenerator object.
     Used when unpacked size of input port equals to 0. */
     private static final String[] GENERATOR_RUN = {
-            "\t\tthis.gen_<port_name>.write(iface.<port_name>);",
-            "\t\tthis.gen_<port_name>_mismatch.write(iface.<port_name>_mismatch);",
+            "\t\tthis.gen_<port_name>.writeStr($sformatf(\"%h\", iface.<port_name>));",
+            "\t\tthis.gen_<port_name>_mismatch.writeStr($sformatf(\"%h\", iface.<port_name>_mismatch));",
     };
 
     /* The template of code for running of WriteGenerator object.
     Used when unpacked size of input port larger then 0. */
     private static final String[] GENERATOR_RUN_UNPACKED = {
             "\t\tfor (int i = 0; i <= PARAMETER - 1; i++) begin",
-            "\t\t    this.gen_<port_name>[i].write(iface.<port_name>[i]);",
-            "\t\t    this.gen_<port_name>_mismatch[i].write(iface.<port_name>_mismatch[i]);",
+            "\t\t    this.gen_<port_name>[i].writeStr($sformatf(\"%h\", iface.<port_name>[i]));",
+            "\t\t    this.gen_<port_name>_mismatch[i].writeStr($sformatf(\"%h\", iface.<port_name>_mismatch[i]));",
             "\t\tend"
     };
 
     /* The template of code for running of WriteGenerator object.
     Used when unpacked size of input port equals to 0. */
     private static final String[] LOG_ERRORS = {
-            "\t\tgen_log.write($sformatf(\"\\t\\t\\t\\t<port_name>: %0d\", iface.<port_name>_errors));",
+            "\t\tgen_log.writeStr($sformatf(\"\\t\\t\\t\\t<port_name>: %0d\", iface.<port_name>_errors));",
     };
 
     /* The template of code for running of WriteGenerator object.
     Used when unpacked size of input port larger then 0. */
     private static final String[] LOG_ERRORS_UNPACKED = {
             "\t\tfor (int i = 0; i <= PARAMETER - 1; i++) begin",
-            "\t\t    gen_log.write($sformatf(\"\\t\\t\\t\\t<port_name>[i]: %0d\", iface.<port_name>_errors[i]));",
+            "\t\t    gen_log.writeStr($sformatf(\"\\t\\t\\t\\t<port_name>[%0d]: %0d\", i, iface.<port_name>_errors[i]));",
             "\t\tend"
     };
 
@@ -104,8 +104,7 @@ public class WriteDriverCodegen extends Codegen {
      *                     (file stores in the resource directory).
      */
     public WriteDriverCodegen() throws IOException {
-        parseFile(BackendParameters.WRITE_DRIVER_SV);
-        setDate();
+        super(WRITE_DRIVER_SV);
     }
 
     /**
@@ -133,7 +132,7 @@ public class WriteDriverCodegen extends Codegen {
                 definePackingAddPort(false, ++index, outputs, GENERATOR_RUN, GENERATOR_RUN_UNPACKED);
 
             /* Adds mismatches logging. */
-            else if (get(index).contains("gen_log.write") && get(index).contains("Mismatches:"))
+            else if (get(index).contains("gen_log.writeStr") && get(index).contains("Mismatches:"))
                 definePackingAddPort(false, ++index, outputs, LOG_ERRORS, LOG_ERRORS_UNPACKED);
 
             /* Adds closing of generator objects. */

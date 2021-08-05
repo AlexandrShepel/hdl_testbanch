@@ -82,24 +82,6 @@ class ReadGenerator #(
             end
 
             $fclose(fd);
-<<<<<<< Updated upstream:src/main/resources/constructor/test_environment/ReadGenerator.sv
-        end
-    endfunction
-
-
-    /*
-        Checks reading and scanning operations for the success.
-        Prints warnings to the console when fail is found.
-    */
-    local function void checkReadingScanning(integer readFaults, integer scanFaults);
-        if (readFaults == 0) begin
-            $display("** Warning: Can't read file: %s\n", filePath);
-            iface.test_passed = 0;
-        end
-
-        if (scanFaults == 0) begin
-            $display("** Warning: Can't interpret input data: %s", filePath);
-=======
         end else
             iface.test_passed = 0;
     endfunction
@@ -112,7 +94,6 @@ class ReadGenerator #(
     local function void checkReadingScanning(integer readFaults, integer scanFaults);
         if (scanFaults == 0 | readFaults == 0) begin
             $display("** Warning: Can't read/scan file: %s\n", filePath);
->>>>>>> Stashed changes:src/alex.shepel/main/resources/classes/ReadGenerator.sv
             $display("            Note that:");
             $display("            a) input files must NOT have empty lines.");
             $display("            b) input data must have hexadecimal format.\n");

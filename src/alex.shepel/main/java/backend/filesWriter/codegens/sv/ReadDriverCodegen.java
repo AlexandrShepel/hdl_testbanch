@@ -1,7 +1,7 @@
-package alex.shepel.hdl_testbench.backend.filesWriter.codeGenerators;
+package backend.filesWriter.codegens.sv;
 
-import alex.shepel.hdl_testbench.backend.BackendParameters;
-import alex.shepel.hdl_testbench.backend.parsers.detectors.PortDescriptor;
+import backend.BackendParameters;
+import backend.parsers.detectors.PortDescriptor;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -13,21 +13,21 @@ import java.util.HashMap;
  * Overwrites "BackendParameters.READ_DRIVER_SV" file
  * based on specified data.
  */
-public class ReadDriverCodegen extends Codegen {
+public class ReadDriverCodegen extends SVCodegen implements BackendParameters {
 
     /* The template of code for initialization of ReadGenerator object.
     Used when unpacked size of input port equals to 0. */
     private static final String[] GENERATOR_INIT = {
-            "\t\tthis.gen_<port_name> = new();",
-            "\t\tthis.gen_<port_name>.open({$sformatf(\"%s\", filePath), \"/<port_name>.txt\"});",
+            "\t\tthis.gen_<port_name> = new(iface);",
+            "\t\tthis.gen_<port_name>.open({$sformatf(\"%s\", filePath), \"/<port_name>.tbv\"});",
     };
 
     /* The template of code for initialization of ReadGenerator object.
     Used when unpacked size of input port larger then 0. */
     private static final String[] GENERATOR_INIT_UNPACKED = {
             "\t\tfor (int i = 0; i <= PARAMETER - 1; i++) begin",
-            "\t\t    this.gen_<port_name>[i] = new();",
-            "\t\t    this.gen_<port_name>[i].open({$sformatf(\"%s\", filePath), \"/<port_name>_\", $sformatf(\"%0d\", i), \".txt\"});",
+            "\t\t    this.gen_<port_name>[i] = new(iface);",
+            "\t\t    this.gen_<port_name>[i].open({$sformatf(\"%s\", filePath), \"/<port_name>_\", $sformatf(\"%0d\", i), \".tbv\"});",
             "\t\tend"
     };
 
@@ -80,14 +80,13 @@ public class ReadDriverCodegen extends Codegen {
      *                     (file stores in the resource directory).
      */
     public ReadDriverCodegen() throws IOException {
-        parseFile(BackendParameters.READ_DRIVER_SV);
-        setDate();
+        super(READ_DRIVER_SV);
     }
 
     /**
      * Overwrites fields in the file
      * where must be placed code
-     * for reading input vectors
+     * for reading input dattors
      * for each of DUT's inputs.
      *
      * @param inputs The HashMap object that contains DUT's inputs.
@@ -112,7 +111,7 @@ public class ReadDriverCodegen extends Codegen {
 
             /* Fills in body of the function that controls correctness of input data. */
             else if (get(index).contains("local function bit checkSize()"))
-                addSizeChecking(index =+ 2, inputs);
+                addSizeChecking(index += 2, inputs);
 
             else if (get(index).contains("function bit isEnding()"))
                 definePackingAddPort(true, ++index, inputs, CHECK_ENDING, CHECK_ENDING_UNPACKED);
@@ -125,15 +124,15 @@ public class ReadDriverCodegen extends Codegen {
     /**
      * Overwrites fields in the file
      * where must be placed code
-     * for reading input vectors
+     * for reading input dattors
      * for each of DUT's outputs.
      *
      * @param outputs The HashMap object that contains DUT's outputs.
      *              Key contain a port name.
      *              Value contain PortDescriptor object.
      */
-    public void setExpectedOutputs(HashMap<String, PortDescriptor> outputs) {
-        outputs = addExpectedName(outputs);
+    public void setOutputs(HashMap<String, PortDescriptor> outputs) {
+        outputs = addExpectedNames(outputs);
 
         for (int index = 0; index < size(); index++) {
             /* Adds ReadGenerator object declaration. */
@@ -146,17 +145,17 @@ public class ReadDriverCodegen extends Codegen {
             else if (get(index).contains("local function void initGens();"))
                 definePackingAddPort(false, ++index, outputs, GENERATOR_INIT, GENERATOR_INIT_UNPACKED);
 
-                /* Fills in ReadGenerator running field. */
+            /* Fills in ReadGenerator running field. */
             else if (get(index).contains("function void run()"))
                 definePackingAddPort(false, ++index, outputs, GENERATOR_RUN, GENERATOR_RUN_UNPACKED);
         }
     }
 
-    private HashMap<String, PortDescriptor> addExpectedName(HashMap<String, PortDescriptor> outputs) {
+    private HashMap<String, PortDescriptor> addExpectedNames(HashMap<String, PortDescriptor> outputs) {
         final HashMap<String, PortDescriptor> expectedOutputs = new HashMap<>();
 
         for (final PortDescriptor desc: outputs.values()) {
-            final PortDescriptor expectedDesc = new PortDescriptor();
+            final PortDescriptor expectedDesc = desc.deepCopy();
             expectedDesc.setName(desc.getName() + "_expect");
             expectedOutputs.put(expectedDesc.getName(), expectedDesc);
         }

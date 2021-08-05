@@ -30,10 +30,6 @@ interface Interface;
 
     // TB internal signals:
 
-<<<<<<< Updated upstream:src/main/resources/constructor/test_environment/Interface.sv
-    bit test_passed;
-=======
     bit test_passed = 1;
->>>>>>> Stashed changes:src/alex.shepel/main/resources/classes/Interface.sv
 
 endinterface

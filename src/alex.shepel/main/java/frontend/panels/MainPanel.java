@@ -1,13 +1,3 @@
-<<<<<<< Updated upstream:src/alex.shepel/main/java/frontend/panels/MainPanel.java
-package alex.shepel.hdl_testbench.frontend.panels;
-
-import alex.shepel.hdl_testbench.frontend.FrontendParameters;
-import alex.shepel.hdl_testbench.frontend.panels.pages.Page0;
-import alex.shepel.hdl_testbench.frontend.panels.pages.Page2;
-import alex.shepel.hdl_testbench.frontend.panels.pages.Page1;
-import alex.shepel.hdl_testbench.frontend.panels.pages.Page3;
-import alex.shepel.hdl_testbench.frontend.panels.pages.Page4;
-=======
 package frontend.panels;
 
 import frontend.FrontendParameters;
@@ -16,7 +6,6 @@ import frontend.panels.pages.Page2;
 import frontend.panels.pages.Page1;
 import frontend.panels.pages.Page3;
 import frontend.panels.pages.Page4;
->>>>>>> Stashed changes:src/main/java/alex/shepel/hdl_testbench/frontend/configurationPanel/ConfigurationPanel.java
 
 import javax.swing.*;
 import java.awt.*;
@@ -150,7 +139,6 @@ public class MainPanel extends JLayeredPane implements FrontendParameters {
     /**
      * Sends selected clocks to the page #3.
      * There user will chose report sampling frequency from this clocks list.
-<<<<<<< Updated upstream:src/alex.shepel/main/java/frontend/panels/MainPanel.java
      *
      * @param clocks Clocks that was selected by user for the DUT clocking.
      */
@@ -160,21 +148,6 @@ public class MainPanel extends JLayeredPane implements FrontendParameters {
     }
 
     /**
-     * Returns a working folder that was specified by a user
-     * and where will be created test environment.
-=======
->>>>>>> Stashed changes:src/main/java/alex/shepel/hdl_testbench/frontend/configurationPanel/ConfigurationPanel.java
-     *
-     * @param clocks Clocks that was selected by user for the DUT clocking.
-     */
-    private void setClocksComboBox(ArrayList<String> clocks) {
-        if (clocks.size() != 0)
-            p3.clockSpecPanel.setComboBox(clocks);
-    }
-
-    /**
-<<<<<<< Updated upstream:src/alex.shepel/main/java/frontend/panels/MainPanel.java
-=======
      * Returns a working folder that was specified by a user
      * and where will be created test environment.
      *
@@ -186,7 +159,6 @@ public class MainPanel extends JLayeredPane implements FrontendParameters {
     }
 
     /**
->>>>>>> Stashed changes:src/main/java/alex/shepel/hdl_testbench/frontend/configurationPanel/ConfigurationPanel.java
      * Sets names of the DUT's clock's ports.
      *
      * @param dutClocks The ArrayList object

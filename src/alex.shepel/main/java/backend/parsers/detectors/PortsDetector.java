@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream:src/alex.shepel/main/java/backend/parsers/detectors/PortsDetector.java
-package alex.shepel.hdl_testbench.backend.parsers.detectors;
-=======
 package backend.parsers.detectors;
->>>>>>> Stashed changes:src/main/java/alex/shepel/hdl_testbench/backend/parser/detectors/PortsDetector.java
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,11 +22,7 @@ public class PortsDetector {
      *                   that contains all code lines
      *                   of parsed file.
      */
-<<<<<<< Updated upstream:src/alex.shepel/main/java/backend/parsers/detectors/PortsDetector.java
-    private void createPortsHashMap(ArrayList<String> parsedFile) {
-=======
     public PortsDetector(ArrayList<String> parsedFile) {
->>>>>>> Stashed changes:src/main/java/alex/shepel/hdl_testbench/backend/parser/detectors/PortsDetector.java
         for (String codeLine: parsedFile)
             if (isPortDeclaration(codeLine))
                 parsePorts(codeLine);
@@ -46,11 +38,7 @@ public class PortsDetector {
      */
     private boolean isPortDeclaration(final String codeLine) {
         final String cleanLine = deleteSpacings(codeLine);
-<<<<<<< Updated upstream:src/alex.shepel/main/java/backend/parsers/detectors/PortsDetector.java
-        boolean isComment = cleanLine.startsWith("//");
-=======
         boolean isComment = cleanLine.startsWith("//") || cleanLine.startsWith("*/");
->>>>>>> Stashed changes:src/main/java/alex/shepel/hdl_testbench/backend/parser/detectors/PortsDetector.java
         boolean isInputOutputFound = cleanLine.contains("input") || cleanLine.contains("output");
         boolean isTypeFound = cleanLine.contains("logic") || cleanLine.contains("wire") || cleanLine.contains("reg");
         return !isComment && isInputOutputFound && isTypeFound;
@@ -65,35 +53,6 @@ public class PortsDetector {
      */
     private void parsePorts(final String portDeclaration) {
         final PortDescriptor descriptor = new PortDescriptor();
-<<<<<<< Updated upstream:src/alex.shepel/main/java/backend/parsers/detectors/PortsDetector.java
-        final String cleanDeclaration = deleteSpacings(portDeclaration);
-
-        final boolean isInput = portDeclaration.contains("input");
-        descriptor.setType(getPortType(cleanDeclaration));
-        descriptor.setSigned(getSigned(cleanDeclaration));
-        descriptor.setPackedSize(getPackedSize(cleanDeclaration));
-        descriptor.setUnpackedSize(getUnpackedSize(cleanDeclaration));
-
-        for (String name: getPortsNames(cleanDeclaration, descriptor)) {
-            PortDescriptor copy = descriptor.deepCopy();
-            copy.setName(name);
-
-            if (isInput)
-                inputs.put(name, copy);
-            else
-                outputs.put(name, copy);
-        }
-    }
-
-    private String[] getPortsNames(String portsDeclaration, final PortDescriptor descriptor) {
-        portsDeclaration = portsDeclaration.replace("input", "").replace("output", "");
-        portsDeclaration = portsDeclaration.replace(descriptor.getType(), "");
-        portsDeclaration = portsDeclaration.replace(descriptor.getSigned(), "");
-        portsDeclaration = portsDeclaration.replace(descriptor.getPackedSize(), "");
-        portsDeclaration = portsDeclaration.replace(descriptor.getUnpackedSize(), "");
-
-        return portsDeclaration.split(",");
-=======
         String cleanDeclaration = deleteSpacings(portDeclaration);
 
         final boolean isInput = portDeclaration.contains("input");
@@ -120,7 +79,6 @@ public class PortsDetector {
             else
                 outputs.put(name, copy);
         }
->>>>>>> Stashed changes:src/main/java/alex/shepel/hdl_testbench/backend/parser/detectors/PortsDetector.java
     }
 
     /**
@@ -184,17 +142,12 @@ public class PortsDetector {
      *         If port is not packed, returns empty string.
      */
     private String getPackedSize(String codeLine) {
-<<<<<<< Updated upstream:src/alex.shepel/main/java/backend/parsers/detectors/PortsDetector.java
-        if (codeLine.indexOf('[') < 0)
-            return "";
-=======
         final int lastInd = codeLine.contains(",") ? codeLine.length() - 2 : codeLine.length() - 1;
 
         if (codeLine.contains("[") && codeLine.indexOf("]") < lastInd)
             return codeLine.substring(codeLine.indexOf('['), codeLine.indexOf(']') + 1);
->>>>>>> Stashed changes:src/main/java/alex/shepel/hdl_testbench/backend/parser/detectors/PortsDetector.java
 
-        return codeLine.substring(codeLine.indexOf('['), codeLine.indexOf(']') + 1);
+        return "";
     }
 
     /**
@@ -206,11 +159,7 @@ public class PortsDetector {
      *         If port is not unpacked, returns empty string.
      */
     private String getUnpackedSize(String codeLine) {
-<<<<<<< Updated upstream:src/alex.shepel/main/java/backend/parsers/detectors/PortsDetector.java
-        if ((codeLine.indexOf("]") == codeLine.length() - 1) || (codeLine.indexOf("]") == codeLine.length() - 2))
-=======
         if (codeLine.contains("["))
->>>>>>> Stashed changes:src/main/java/alex/shepel/hdl_testbench/backend/parser/detectors/PortsDetector.java
             return codeLine.substring(codeLine.indexOf('['), codeLine.indexOf(']') + 1);
 
         return "";

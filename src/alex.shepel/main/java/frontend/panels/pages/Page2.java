@@ -1,14 +1,7 @@
-<<<<<<< Updated upstream:src/alex.shepel/main/java/frontend/panels/pages/Page2.java
-package alex.shepel.hdl_testbench.frontend.panels.pages;
-
-import alex.shepel.hdl_testbench.frontend.FrontendParameters;
-import alex.shepel.hdl_testbench.frontend.widgets.PresetTextArea;
-=======
 package frontend.panels.pages;
 
 import frontend.FrontendParameters;
 import frontend.widgets.PresetTextArea;
->>>>>>> Stashed changes:src/main/java/alex/shepel/hdl_testbench/frontend/configurationPanel/pages/Page2.java
 
 import javax.swing.*;
 import java.awt.*;

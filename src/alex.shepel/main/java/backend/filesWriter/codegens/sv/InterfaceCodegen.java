@@ -1,7 +1,7 @@
-package alex.shepel.hdl_testbench.backend.filesWriter.codeGenerators;
+package backend.filesWriter.codegens.sv;
 
-import alex.shepel.hdl_testbench.backend.BackendParameters;
-import alex.shepel.hdl_testbench.backend.parsers.detectors.PortDescriptor;
+import backend.BackendParameters;
+import backend.parsers.detectors.PortDescriptor;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -13,7 +13,7 @@ import java.util.HashMap;
  * Overwrites "BackendParameters.INTERFACE_SV" file
  * based on specified data.
  */
-public class InterfaceCodegen extends Codegen {
+public class InterfaceCodegen extends SVCodegen implements BackendParameters {
 
     /**
      * The class constructor.
@@ -22,8 +22,7 @@ public class InterfaceCodegen extends Codegen {
      *                     (file stores in the resource directory).
      */
     public InterfaceCodegen() throws IOException {
-        parseFile(BackendParameters.INTERFACE_SV);
-        setDate();
+        super(INTERFACE_SV);
     }
 
     /**
@@ -54,7 +53,7 @@ public class InterfaceCodegen extends Codegen {
      *               Key contain a port name.
      *               Value contain PortDescriptor object.
      */
-    public void setDutInputs(HashMap<String, PortDescriptor> inputs) {
+    public void setInputs(HashMap<String, PortDescriptor> inputs) {
         for (int index = 0; index < size(); index++) {
             if (get(index).contains("DUT inputs")) {
                 for (PortDescriptor portDescriptor: inputs.values())
@@ -72,7 +71,7 @@ public class InterfaceCodegen extends Codegen {
      *                Key contain a port name.
      *                Value contain PortDescriptor object.
      */
-    public void setDutOutputs(HashMap<String, PortDescriptor> outputs) {
+    public void setOutputs(HashMap<String, PortDescriptor> outputs) {
         for (int index = 0; index < size(); index++) {
             if (get(index).contains("DUT outputs"))
                 for (PortDescriptor desc : outputs.values())
@@ -84,6 +83,7 @@ public class InterfaceCodegen extends Codegen {
                     add(++index, "\t" + desc.toString().replace(desc.getName(), expectName) + ";");
                     add(++index, "\t" + toExtraPort(desc, "mismatch") + ";");
                     add(++index, "\t" + toExtraPort(desc, "errors") + ";");
+                    add(++index, "");
                 }
         }
     }

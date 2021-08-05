@@ -45,10 +45,6 @@ class ReadDriver #(
         Initializes the generators. 
     */
     local function void initGens();
-<<<<<<< Updated upstream:src/main/resources/constructor/test_environment/ReadDriver.sv
-
-        checkSize();
-=======
 
         checkSize();
     endfunction
@@ -58,23 +54,12 @@ class ReadDriver #(
         Assigns a read data to the DUT ports.
     */
     function void run();
->>>>>>> Stashed changes:src/alex.shepel/main/resources/classes/ReadDriver.sv
     endfunction
 
 
     /*
         Checks the end of the test vector.
     */
-<<<<<<< Updated upstream:src/main/resources/constructor/test_environment/ReadDriver.sv
-    function void run();
-    endfunction
-
-
-    /*
-        Checks the end of the test vector.
-    */
-=======
->>>>>>> Stashed changes:src/alex.shepel/main/resources/classes/ReadDriver.sv
     function bit isEnding();
     endfunction
 
